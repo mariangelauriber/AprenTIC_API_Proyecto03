@@ -1,0 +1,20 @@
+tipo,nombre,apellidos,email,password,rol,especialidad,edad,campus,curso,fechaInicio,fechaFin,descripcion,fechaEntrega,calificacion,estado,observaciones
+admin,Carlos,Martínez López,admin@aprentic.es,admin1234,admin,,,,,,,,,,
+profesor,Laura,Sánchez Pérez,laura@aprentic.es,prof1234,profesor,Front End,,Sevilla,,,,,,,
+profesor,Miguel,Romero García,miguel@aprentic.es,prof1234,profesor,Back End,,Sevilla,,,,,,,
+alumno,Rocío,García Fernández,rocio@aprentic.es,alu1234,alumno,,22,Sevilla,Front End Web,,,,,,
+alumno,Lucía,Torres Molina,lucia@aprentic.es,alu1234,alumno,,24,Sevilla,Front End Web,,,,,,
+alumno,Pablo,Jiménez Ruiz,pablo@aprentic.es,alu1234,alumno,,21,Sevilla,Front End Web,,,,,,
+alumno,Ana,Domínguez Vega,ana@aprentic.es,alu1234,alumno,,25,Sevilla,Back End Web,,,,,,
+alumno,Sergio,Navarro Díaz,sergio@aprentic.es,alu1234,alumno,,23,Sevilla,Back End Web,,,,,,
+alumno,María,Castillo Reyes,maria@aprentic.es,alu1234,alumno,,22,Sevilla,Back End Web,,,,,,
+curso,,,,,,,,,Front End Web,2025-01-13,2025-06-13,Curso de desarrollo Front End con HTML CSS y JavaScript,,,
+curso,,,,,,,,,Back End Web,2025-01-13,2025-06-13,Curso de desarrollo Back End con Node.js Express y MongoDB,,,
+proyecto,,,,,,,,,,,,Landing Page con HTML y CSS,2025-03-01,,,
+proyecto,,,,,,,,,,,,API REST con Node.js y Express,2025-03-01,,,
+nota,Rocío,García Fernández,,,,,,,,,,Landing Page con HTML y CSS,,8.5,apto,Buen diseño responsive
+nota,Lucía,Torres Molina,,,,,,,,,,Landing Page con HTML y CSS,,7,apto,Correcta estructura semántica
+nota,Pablo,Jiménez Ruiz,,,,,,,,,,Landing Page con HTML y CSS,,5,apto,Aprobado justo mejora el CSS
+nota,Ana,Domínguez Vega,,,,,,,,,,API REST con Node.js y Express,,9,apto,Excelente manejo de rutas
+nota,Sergio,Navarro Díaz,,,,,,,,,,API REST con Node.js y Express,,6,apto,Funciona bien falta validación
+nota,María,Castillo Reyes,,,,,,,,,,API REST con Node.js y Express,,4,no apto,Faltan endpoints necesarios
