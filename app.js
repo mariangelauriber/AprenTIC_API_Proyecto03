@@ -1,13 +1,13 @@
 const express = require("express");
-const { constant } = require("lodash");
+const _ = require("lodash");
 require("dotenv").config();
 
-const conectarDB = require("./config/db");
+const conectarDB = require("./src/config/db");
 
 // CREAR MODELOS E IMPORTARLOS
 /* const Admin = require('./models/Admin');
 const Profesor = require('./models/Profesor'); */
-const profesorRoutes = require("./routes/profesorRoutes");
+const profesorRoutes = require("./src/routes/profesorRoutes");
 //const adminRoutes = require("./routes/adminRoutes");
 
 
