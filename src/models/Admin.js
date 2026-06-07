@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const AlumnoSchema = new mongoose.Schema({
+const AdminSchema = new mongoose.Schema({
   nombre: { type: String, required: true, trim: true },
   apellidos: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true, trim: true },
@@ -9,11 +9,8 @@ const AlumnoSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ["admin", "profesor", "alumno"],
-    default: "alumno",
+    default: "admin",
   },
-  edad: { type: Number },
-  campus: { type: String, trim: true },
-  curso: { type: mongoose.Schema.Types.ObjectId, ref: "Curso" },
 });
 
-module.exports = mongoose.model("Alumno", AlumnoSchema, "alumno");
+module.exports = mongoose.model("Admin", AdminSchema, "admin");

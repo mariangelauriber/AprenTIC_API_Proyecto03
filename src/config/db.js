@@ -1,9 +1,14 @@
-const mongoose = require('mongoose');
-const MONGO_URI=process.env.MONGO_URI;
+require("dns").setServers(["8.8.8.8"]);
 
-const connectDB = async () => {
-  await mongoose.connect(MONGO_URI);
-  console.log('MongoDB connected');
-};
+const mongoose = require("mongoose");
 
-module.exports = connectDB;
+async function conectarDB() {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Conectado a BBDD");
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+module.exports = conectarDB;

@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
-const notaSchema = new mongoose.Schema({
-  proyecto: { type: mongoose.Schema.Types.ObjectId, ref: 'Proyecto', required: true },
+const NotaSchema = new mongoose.Schema({
   alumno: { type: mongoose.Schema.Types.ObjectId, ref: 'Alumno', required: true },
-  profesor: { type: mongoose.Schema.Types.ObjectId, ref: 'Profesor', required: true },
-  nota: { type: Number, required: true, min: 0, max: 10 },
-  apto: { type: Boolean, required: true },
-  observaciones: { type: String },
-}, { timestamps: true });
+  proyecto: { type: mongoose.Schema.Types.ObjectId, ref: 'Proyecto', required: true },
+  calificacion: { type: Number, required: true, min: 0, max: 10 },
+  estado: { type: String, required: true, enum: ['apto', 'no apto'] },
+  observaciones: { type: String, trim: true }
+});
 
-module.exports = mongoose.model('Nota', notaSchema);
+module.exports = mongoose.model('Nota', NotaSchema, 'nota');

@@ -2,14 +2,15 @@
   "name": "aprentic_api_proyecto03",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "dev2": "nodemon config.js"
   },
   "keywords": [],
   "author": "",
