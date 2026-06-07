@@ -7,8 +7,12 @@ const conectDB = require('./config/db');
 
 
 
+const path = require('path');
+
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
+app.get('/', (req, res) => res.redirect('/login.html'));
 
 conectDB();
 
@@ -20,6 +24,7 @@ function logger(req, res, next) {
 app.use(logger);
 
 // NUESROS ENDPONTS VAN AQUÍ
+
 
 
 

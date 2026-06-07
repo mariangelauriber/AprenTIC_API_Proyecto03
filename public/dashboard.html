@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AprenTIC Campus — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ════════════════════ APP SHELL ════════════════════ -->
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+      </div>
+      <span>AprenTIC</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">General</div>
+        <div class="nav-item active" data-view="overview">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Resumen
+        </div>
+        <div class="nav-item" data-view="analytics">
+          <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zM16.2 13h2.8v6h-2.8v-6z"/></svg>
+          Analíticas
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Recursos</div>
+        <div class="nav-item" data-view="alumnos">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          Alumnos
+        </div>
+        <div class="nav-item" data-view="profesores">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Profesores
+        </div>
+        <div class="nav-item" data-view="promociones">
+          <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+          Promociones
+        </div>
+        <div class="nav-item" data-view="proyectos">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+          Proyectos
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar" id="avatarInitial">?</div>
+        <div>
+          <div class="user-name" id="userNameSidebar">Cargando...</div>
+          <div class="user-role" id="userRoleSidebar">—</div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-full btn-sm" id="logoutBtn">Cerrar sesión</button>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <header class="topbar">
+      <span class="topbar-title" id="topbarTitle">Resumen</span>
+      <div class="topbar-actions">
+        <a href="/api-docs" target="_blank" class="btn btn-outline btn-sm">Swagger UI</a>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+      <!-- contenido dinámico -->
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── MODAL GENÉRICO ── -->
+<div class="modal-backdrop hidden" id="modalBackdrop">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-title" id="modalTitle">Formulario</div>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" id="modalCancel">Cancelar</button>
+      <button class="btn btn-primary btn-sm" id="modalSubmit">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ════════════════════ SCRIPT ════════════════════ -->
+<script>
+const API = '';
+const token = () => localStorage.getItem('token');
+
+// ── Auth guard ──────────────────────────────────────────────
+if (!token()) window.location.href = 'login.html';
+
+// ── Fetch helper ────────────────────────────────────────────
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token()}`, ...(opts.headers || {}) },
+  });
+  if (res.status === 401) { localStorage.clear(); window.location.href = 'login.html'; }
+  return res;
+}
+
+// ── Toast ────────────────────────────────────────────────────
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ── Modal helpers ────────────────────────────────────────────
+const backdrop = document.getElementById('modalBackdrop');
+let onModalSubmit = null;
+
+function openModal(title, bodyHtml, onSubmit) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = bodyHtml;
+  onModalSubmit = onSubmit;
+  backdrop.classList.remove('hidden');
+}
+function closeModal() { backdrop.classList.add('hidden'); onModalSubmit = null; }
+
+document.getElementById('modalClose').onclick  = closeModal;
+document.getElementById('modalCancel').onclick = closeModal;
+document.getElementById('modalSubmit').onclick = () => { if (onModalSubmit) onModalSubmit(); };
+backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+
+// ── Sidebar nav ──────────────────────────────────────────────
+const views = { overview: renderOverview, analytics: renderAnalytics, alumnos: renderAlumnos, profesores: renderProfesores, promociones: renderPromociones, proyectos: renderProyectos };
+let activeView = 'overview';
+
+document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    activeView = item.dataset.view;
+    document.getElementById('topbarTitle').textContent = item.textContent.trim();
+    views[activeView]?.();
+  });
+});
+
+document.getElementById('logoutBtn').onclick = () => { localStorage.clear(); window.location.href = 'login.html'; };
+
+// ── User info from token ─────────────────────────────────────
+(function setUserInfo() {
+  try {
+    const payload = JSON.parse(atob(token().split('.')[1]));
+    const rol = payload.rol || 'usuario';
+    document.getElementById('userRoleSidebar').textContent = rol.charAt(0).toUpperCase() + rol.slice(1);
+    document.getElementById('userNameSidebar').textContent = payload.nombre || payload.email || 'Usuario';
+    document.getElementById('avatarInitial').textContent = (payload.nombre || payload.email || '?')[0].toUpperCase();
+  } catch {}
+})();
+
+// ══════════════════════════════════════════════════════════════
+// VISTAS
+// ══════════════════════════════════════════════════════════════
+
+// ── OVERVIEW ────────────────────────────────────────────────
+async function renderOverview() {
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon purple"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><div><div class="stat-value" id="stat-alumnos">—</div><div class="stat-label">Alumnos</div></div></div>
+      <div class="stat-card"><div class="stat-icon blue"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div><div><div class="stat-value" id="stat-profesores">—</div><div class="stat-label">Profesores</div></div></div>
+      <div class="stat-card"><div class="stat-icon green"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></div><div><div class="stat-value" id="stat-promociones">—</div><div class="stat-label">Promociones</div></div></div>
+      <div class="stat-card"><div class="stat-icon orange"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div><div><div class="stat-value" id="stat-proyectos">—</div><div class="stat-label">Proyectos</div></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Últimos alumnos registrados</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre</th><th>Email</th><th>Promoción</th></tr></thead>
+          <tbody id="recentAlumnos"><tr><td colspan="3" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>`;
+
+  // Cargar stats en paralelo
+  const endpoints = [
+    ['/api/alumnos', 'stat-alumnos'],
+    ['/api/profesores', 'stat-profesores'],
+    ['/api/promociones', 'stat-promociones'],
+    ['/api/proyectos', 'stat-proyectos'],
+  ];
+
+  await Promise.all(endpoints.map(async ([url, id]) => {
+    try {
+      const r = await apiFetch(url);
+      const d = await r.json();
+      document.getElementById(id).textContent = Array.isArray(d) ? d.length : (d.total ?? '—');
+    } catch { document.getElementById(id).textContent = '?'; }
+  }));
+
+  try {
+    const r = await apiFetch('/api/alumnos?limit=5&sort=-createdAt');
+    const alumnos = await r.json();
+    const tbody = document.getElementById('recentAlumnos');
+    if (!alumnos.length) { tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-sm" style="padding:1rem;">Sin datos</td></tr>'; return; }
+    tbody.innerHTML = alumnos.map(a => `
+      <tr>
+        <td class="bold">${a.nombre} ${a.apellidos}</td>
+        <td class="text-muted">${a.email}</td>
+        <td>${a.promocion?.nombre ?? '—'}</td>
+      </tr>`).join('');
+  } catch {}
+}
+
+// ── ANALYTICS ───────────────────────────────────────────────
+async function renderAnalytics() {
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;">
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Tasa de aptos por campus</span></div>
+        <div class="panel-body">
+          <div class="bar-chart" id="chartAptos"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Ranking proyectos con más no-aptos</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Proyecto</th><th>No-aptos</th></tr></thead>
+            <tbody id="rankingTable"><tr><td colspan="3" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Alumnos en riesgo (≥ 2 no-aptos)</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Alumno</th><th>Email</th><th>No-aptos</th></tr></thead>
+          <tbody id="riesgoTable"><tr><td colspan="3" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>`;
+
+  // Aptos por campus
+  try {
+    const r = await apiFetch('/api/analytics/aptos-por-campus');
+    const data = await r.json();
+    const chart = document.getElementById('chartAptos');
+    if (!data.length) { chart.innerHTML = '<span class="text-muted text-sm">Sin datos</span>'; }
+    else {
+      const max = Math.max(...data.map(d => d.tasaAptos));
+      chart.innerHTML = data.map(d => `
+        <div class="bar-group">
+          <div class="bar" style="height:${Math.round((d.tasaAptos/max)*120)}px" title="${d.tasaAptos.toFixed(1)}%"></div>
+          <span class="bar-label">${d.campus}</span>
+        </div>`).join('');
+    }
+  } catch {}
+
+  // Ranking no-aptos
+  try {
+    const r = await apiFetch('/api/analytics/ranking-no-aptos');
+    const data = await r.json();
+    const tbody = document.getElementById('rankingTable');
+    if (!data.length) { tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-sm" style="padding:1rem;">Sin datos</td></tr>'; }
+    else tbody.innerHTML = data.map((d, i) => `<tr><td class="bold text-muted">${i+1}</td><td>${d.proyecto?.nombre ?? '—'}</td><td><span class="badge badge-no-apto">${d.noAptos}</span></td></tr>`).join('');
+  } catch {}
+
+  // Alumnos en riesgo
+  try {
+    const r = await apiFetch('/api/analytics/alumnos-en-riesgo');
+    const data = await r.json();
+    const tbody = document.getElementById('riesgoTable');
+    if (!data.length) { tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-sm" style="padding:1rem;">Sin alumnos en riesgo</td></tr>'; }
+    else tbody.innerHTML = data.map(d => `<tr><td class="bold">${d.alumno?.nombre ?? '—'} ${d.alumno?.apellidos ?? ''}</td><td class="text-muted">${d.alumno?.email ?? '—'}</td><td><span class="badge badge-no-apto">${d.noAptos}</span></td></tr>`).join('');
+  } catch {}
+}
+
+// ── ALUMNOS ──────────────────────────────────────────────────
+async function renderAlumnos() {
+  const content = document.getElementById('content');
+  const rol = localStorage.getItem('userRole');
+  content.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Alumnos</span>
+        ${rol === 'admin' ? '<button class="btn btn-primary btn-sm" id="btnNewAlumno">+ Nuevo alumno</button>' : ''}
+      </div>
+      <div class="panel-body" style="padding-bottom:.5rem;">
+        <div class="filters">
+          <input type="text" id="filterNombre" placeholder="Buscar por nombre..." style="flex:1;min-width:160px;" />
+          <input type="text" id="filterPromocion" placeholder="ID promoción..." style="width:160px;" />
+          <button class="btn btn-outline btn-sm" id="btnFiltrar">Buscar</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre</th><th>Email</th><th>Promoción</th><th>Campus</th>${rol === 'admin' ? '<th></th>' : ''}</tr></thead>
+          <tbody id="alumnosTable"><tr><td colspan="5" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="alumnosPag"></div>
+    </div>`;
+
+  let page = 1;
+
+  const load = async () => {
+    const nombre    = document.getElementById('filterNombre')?.value || '';
+    const promocion = document.getElementById('filterPromocion')?.value || '';
+    const qs = new URLSearchParams({ page, limit: 10, ...(promocion && { promocion }) });
+    try {
+      const r = await apiFetch(`/api/alumnos?${qs}`);
+      const alumnos = await r.json();
+      const tbody = document.getElementById('alumnosTable');
+      if (!alumnos.length) { tbody.innerHTML = `<tr><td colspan="5" class="text-muted text-sm" style="padding:1rem;">Sin resultados</td></tr>`; return; }
+      tbody.innerHTML = alumnos
+        .filter(a => !nombre || `${a.nombre} ${a.apellidos}`.toLowerCase().includes(nombre.toLowerCase()))
+        .map(a => `
+          <tr>
+            <td class="bold">${a.nombre} ${a.apellidos}</td>
+            <td class="text-muted">${a.email}</td>
+            <td>${a.promocion?.nombre ?? '—'}</td>
+            <td>${a.promocion?.campus?.nombre ?? '—'}</td>
+            ${rol === 'admin' ? `<td><button class="btn btn-danger btn-sm" data-id="${a._id}" data-action="delAlumno">Eliminar</button></td>` : ''}
+          </tr>`).join('');
+
+      // Delete handlers
+      tbody.querySelectorAll('[data-action="delAlumno"]').forEach(btn => {
+        btn.onclick = () => deleteResource('/api/alumnos', btn.dataset.id, renderAlumnos);
+      });
+    } catch { }
+  };
+
+  document.getElementById('btnFiltrar')?.addEventListener('click', () => { page = 1; load(); });
+  document.getElementById('btnNewAlumno')?.addEventListener('click', () => openAlumnoModal());
+  load();
+}
+
+function openAlumnoModal(alumno = null) {
+  openModal(alumno ? 'Editar alumno' : 'Nuevo alumno', `
+    <div class="form-group"><label>Nombre</label><input id="f-nombre" value="${alumno?.nombre ?? ''}" /></div>
+    <div class="form-group"><label>Apellidos</label><input id="f-apellidos" value="${alumno?.apellidos ?? ''}" /></div>
+    <div class="form-group"><label>Email</label><input type="email" id="f-email" value="${alumno?.email ?? ''}" /></div>
+    <div class="form-group"><label>ID Promoción</label><input id="f-promocion" value="${alumno?.promocion?._id ?? alumno?.promocion ?? ''}" /></div>
+  `, async () => {
+    const body = { nombre: document.getElementById('f-nombre').value, apellidos: document.getElementById('f-apellidos').value, email: document.getElementById('f-email').value, promocion: document.getElementById('f-promocion').value };
+    const url    = alumno ? `/api/alumnos/${alumno._id}` : '/api/alumnos';
+    const method = alumno ? 'PUT' : 'POST';
+    const r = await apiFetch(url, { method, body: JSON.stringify(body) });
+    if (r.ok) { toast(alumno ? 'Alumno actualizado' : 'Alumno creado', 'success'); closeModal(); renderAlumnos(); }
+    else { const d = await r.json(); toast(d.error || 'Error', 'error'); }
+  });
+}
+
+// ── PROFESORES ───────────────────────────────────────────────
+async function renderProfesores() {
+  const content = document.getElementById('content');
+  const rol = localStorage.getItem('userRole');
+  content.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Profesores</span>
+        ${rol === 'admin' ? '<button class="btn btn-primary btn-sm" id="btnNewProf">+ Nuevo profesor</button>' : ''}
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre</th><th>Email</th><th>Campus</th>${rol === 'admin' ? '<th></th>' : ''}</tr></thead>
+          <tbody id="profesoresTable"><tr><td colspan="4" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>`;
+
+  try {
+    const r = await apiFetch('/api/profesores');
+    const profesores = await r.json();
+    const tbody = document.getElementById('profesoresTable');
+    if (!profesores.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-muted" style="padding:1rem;">Sin datos</td></tr>'; return; }
+    tbody.innerHTML = profesores.map(p => `
+      <tr>
+        <td class="bold">${p.nombre} ${p.apellidos}</td>
+        <td class="text-muted">${p.email}</td>
+        <td>${(p.campus || []).map(c => c.nombre ?? c).join(', ') || '—'}</td>
+        ${rol === 'admin' ? `<td><button class="btn btn-danger btn-sm" data-id="${p._id}" data-action="delProf">Eliminar</button></td>` : ''}
+      </tr>`).join('');
+
+    tbody.querySelectorAll('[data-action="delProf"]').forEach(btn => {
+      btn.onclick = () => deleteResource('/api/profesores', btn.dataset.id, renderProfesores);
+    });
+  } catch {}
+
+  document.getElementById('btnNewProf')?.addEventListener('click', () => openProfesorModal());
+}
+
+function openProfesorModal() {
+  openModal('Nuevo profesor', `
+    <div class="form-group"><label>Nombre</label><input id="f-nombre" /></div>
+    <div class="form-group"><label>Apellidos</label><input id="f-apellidos" /></div>
+    <div class="form-group"><label>Email</label><input type="email" id="f-email" /></div>
+  `, async () => {
+    const body = { nombre: document.getElementById('f-nombre').value, apellidos: document.getElementById('f-apellidos').value, email: document.getElementById('f-email').value };
+    const r = await apiFetch('/api/profesores', { method: 'POST', body: JSON.stringify(body) });
+    if (r.ok) { toast('Profesor creado', 'success'); closeModal(); renderProfesores(); }
+    else { const d = await r.json(); toast(d.error || 'Error', 'error'); }
+  });
+}
+
+// ── PROMOCIONES ──────────────────────────────────────────────
+async function renderPromociones() {
+  const content = document.getElementById('content');
+  const rol = localStorage.getItem('userRole');
+  content.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Promociones</span>
+        ${rol === 'admin' ? '<button class="btn btn-primary btn-sm" id="btnNewPromo">+ Nueva promoción</button>' : ''}
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre</th><th>Campus</th><th>Inicio</th><th>Fin</th>${rol === 'admin' ? '<th></th>' : ''}</tr></thead>
+          <tbody id="promocionesTable"><tr><td colspan="5" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>`;
+
+  try {
+    const r = await apiFetch('/api/promociones');
+    const promos = await r.json();
+    const tbody = document.getElementById('promocionesTable');
+    if (!promos.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-muted" style="padding:1rem;">Sin datos</td></tr>'; return; }
+    tbody.innerHTML = promos.map(p => `
+      <tr>
+        <td class="bold">${p.nombre}</td>
+        <td>${p.campus?.nombre ?? '—'}</td>
+        <td class="text-muted">${p.fechaInicio ? new Date(p.fechaInicio).toLocaleDateString('es-ES') : '—'}</td>
+        <td class="text-muted">${p.fechaFin ? new Date(p.fechaFin).toLocaleDateString('es-ES') : '—'}</td>
+        ${rol === 'admin' ? `<td><button class="btn btn-danger btn-sm" data-id="${p._id}" data-action="delPromo">Eliminar</button></td>` : ''}
+      </tr>`).join('');
+
+    tbody.querySelectorAll('[data-action="delPromo"]').forEach(btn => {
+      btn.onclick = () => deleteResource('/api/promociones', btn.dataset.id, renderPromociones);
+    });
+  } catch {}
+
+  document.getElementById('btnNewPromo')?.addEventListener('click', () => openPromoModal());
+}
+
+function openPromoModal() {
+  openModal('Nueva promoción', `
+    <div class="form-group"><label>Nombre</label><input id="f-nombre" /></div>
+    <div class="form-group"><label>ID Campus</label><input id="f-campus" /></div>
+    <div class="form-group"><label>Fecha inicio</label><input type="date" id="f-fechaInicio" /></div>
+    <div class="form-group"><label>Fecha fin</label><input type="date" id="f-fechaFin" /></div>
+  `, async () => {
+    const body = { nombre: document.getElementById('f-nombre').value, campus: document.getElementById('f-campus').value, fechaInicio: document.getElementById('f-fechaInicio').value, fechaFin: document.getElementById('f-fechaFin').value || undefined };
+    const r = await apiFetch('/api/promociones', { method: 'POST', body: JSON.stringify(body) });
+    if (r.ok) { toast('Promoción creada', 'success'); closeModal(); renderPromociones(); }
+    else { const d = await r.json(); toast(d.error || 'Error', 'error'); }
+  });
+}
+
+// ── PROYECTOS ────────────────────────────────────────────────
+async function renderProyectos() {
+  const content = document.getElementById('content');
+  const rol = localStorage.getItem('userRole');
+  content.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Proyectos</span>
+        ${rol === 'admin' ? '<button class="btn btn-primary btn-sm" id="btnNewProy">+ Nuevo proyecto</button>' : ''}
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre</th><th>Descripción</th><th>Promoción</th>${rol === 'admin' ? '<th></th>' : ''}</tr></thead>
+          <tbody id="proyectosTable"><tr><td colspan="4" class="text-muted text-sm" style="padding:1rem;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>`;
+
+  try {
+    const r = await apiFetch('/api/proyectos');
+    const proyectos = await r.json();
+    const tbody = document.getElementById('proyectosTable');
+    if (!proyectos.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-muted" style="padding:1rem;">Sin datos</td></tr>'; return; }
+    tbody.innerHTML = proyectos.map(p => `
+      <tr>
+        <td class="bold">${p.nombre}</td>
+        <td class="text-muted">${p.descripcion || '—'}</td>
+        <td>${p.promocion?.nombre ?? '—'}</td>
+        ${rol === 'admin' ? `<td><button class="btn btn-danger btn-sm" data-id="${p._id}" data-action="delProy">Eliminar</button></td>` : ''}
+      </tr>`).join('');
+
+    tbody.querySelectorAll('[data-action="delProy"]').forEach(btn => {
+      btn.onclick = () => deleteResource('/api/proyectos', btn.dataset.id, renderProyectos);
+    });
+  } catch {}
+
+  document.getElementById('btnNewProy')?.addEventListener('click', () => openProyectoModal());
+}
+
+function openProyectoModal() {
+  openModal('Nuevo proyecto', `
+    <div class="form-group"><label>Nombre</label><input id="f-nombre" /></div>
+    <div class="form-group"><label>Descripción</label><input id="f-descripcion" /></div>
+    <div class="form-group"><label>ID Promoción</label><input id="f-promocion" /></div>
+  `, async () => {
+    const body = { nombre: document.getElementById('f-nombre').value, descripcion: document.getElementById('f-descripcion').value, promocion: document.getElementById('f-promocion').value };
+    const r = await apiFetch('/api/proyectos', { method: 'POST', body: JSON.stringify(body) });
+    if (r.ok) { toast('Proyecto creado', 'success'); closeModal(); renderProyectos(); }
+    else { const d = await r.json(); toast(d.error || 'Error', 'error'); }
+  });
+}
+
+// ── DELETE helper ────────────────────────────────────────────
+function deleteResource(base, id, refresh) {
+  if (!confirm('¿Eliminar este registro?')) return;
+  apiFetch(`${base}/${id}`, { method: 'DELETE' }).then(r => {
+    if (r.ok) { toast('Eliminado', 'success'); refresh(); }
+    else toast('No se pudo eliminar', 'error');
+  });
+}
+
+// ── Render inicial ───────────────────────────────────────────
+renderOverview();
+</script>
+
+</body>
+</html>
