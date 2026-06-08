@@ -3,99 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AprenTIC Campus — Login</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>Login | AprenTIC Campus API</title>
+  <link rel="stylesheet" href="./css/styles.css" />
 </head>
-<body class="login-page">
+<body>
+  <!--
+    Pantalla de login sencilla y profesional.
+    El formulario llama a /api/auth/login usando js/auth.js.
+  -->
 
-  <div class="login-card">
-
-    <div class="login-logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
-      </div>
-      <h1>AprenTIC Campus</h1>
-      <p>API de gestión académica</p>
-    </div>
-
-    <div id="alert" class="alert alert-error hidden"></div>
-
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" placeholder="admin@aprentic.com" required autocomplete="email" />
+  <main class="login-layout">
+    <section class="login-hero">
+      <div class="brand-row">
+        <div class="brand-mark">A</div>
+        <span>AprenTIC Campus API</span>
       </div>
 
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+      <h1>Panel académico multi-campus</h1>
+      <p>
+        Administra alumnos, profesores, promociones, proyectos, notas y métricas académicas
+        desde una interfaz conectada a tu API REST.
+      </p>
+
+      <div class="feature-list">
+        <article>
+          <strong>CRUD académico</strong>
+          <span>Gestiona entidades principales del bootcamp.</span>
+        </article>
+        <article>
+          <strong>Analytics</strong>
+          <span>Consulta aptos, no aptos y alumnos en riesgo.</span>
+        </article>
+        <article>
+          <strong>Roles</strong>
+          <span>Base preparada para admin y profesores.</span>
+        </article>
       </div>
+    </section>
 
-      <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
-        <span id="btnText">Iniciar sesión</span>
-        <span id="btnSpinner" class="spinner hidden"></span>
-      </button>
-    </form>
+    <section class="login-panel">
+      <div class="login-card">
+        <h2>Iniciar sesión</h2>
+        <p class="muted">
+          Usa las credenciales creadas en el seed o crea primero un admin desde Postman.
+        </p>
 
-    <p class="text-sm text-muted mt-4" style="text-align:center;">
-      ¿No tienes cuenta? Habla con un administrador.
-    </p>
+        <form id="loginForm" class="form-stack">
+          <label>
+            Email
+            <input
+              type="email"
+              id="email"
+              placeholder="admin@aprentic.es"
+              autocomplete="email"
+              required
+            />
+          </label>
 
-    <p class="text-sm text-muted mt-2" style="text-align:center; border-top:1px solid var(--border); padding-top:.75rem;">
-      <a href="/api-docs" target="_blank" style="color:var(--primary); font-weight:600;">Ver Swagger UI →</a>
-    </p>
+          <label>
+            Contraseña
+            <input
+              type="password"
+              id="password"
+              placeholder="admin1234"
+              autocomplete="current-password"
+              required
+            />
+          </label>
 
-  </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            Entrar al dashboard
+          </button>
+        </form>
 
-  <script>
-    const API = '';  // mismo origen; cambia a URL de Render en producción
+        <div id="loginMessage" class="message hidden"></div>
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const alert = document.getElementById('alert');
-      const btnText = document.getElementById('btnText');
-      const btnSpinner = document.getElementById('btnSpinner');
+        <div class="demo-box">
+          <strong>Credenciales demo sugeridas</strong>
+          <span>Email: admin@aprentic.es</span>
+          <span>Password: admin1234</span>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      alert.classList.add('hidden');
-      btnText.textContent = 'Entrando...';
-      btnSpinner.classList.remove('hidden');
-      document.getElementById('submitBtn').disabled = true;
-
-      const email    = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        const res  = await fetch(`${API}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.error || 'Credenciales inválidas');
-
-        localStorage.setItem('token', data.token);
-
-        // Decodificar payload para guardar rol
-        const payload = JSON.parse(atob(data.token.split('.')[1]));
-        localStorage.setItem('userRole', payload.rol);
-        localStorage.setItem('userId', payload.id);
-
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        alert.textContent = err.message;
-        alert.classList.remove('hidden');
-        btnText.textContent = 'Iniciar sesión';
-        btnSpinner.classList.add('hidden');
-        document.getElementById('submitBtn').disabled = false;
-      }
-    });
-
-    // Redirigir si ya hay token
-    if (localStorage.getItem('token')) window.location.href = 'dashboard.html';
-  </script>
-
+  <script src="./js/api.js"></script>
+  <script src="./js/auth.js"></script>
 </body>
 </html>

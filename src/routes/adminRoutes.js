@@ -1,7 +1,11 @@
 const router = require('express').Router();
 const ctrl = require('../controllers/AdminController');
 const validate = require('../middleware/validator');
+const authRequired = require('../middleware/authRequired');
+
 const { body } = require('express-validator');
+
+const requireRole = require('../middleware/requireRole');
 
 const validationAdmin = [
   body('nombre').isString().withMessage('Nombre incorrecto').trim().isLength({ min: 2, max: 30 }).withMessage('El nombre debe tener entre 2 y 30 caracteres'),
@@ -10,8 +14,10 @@ const validationAdmin = [
   body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
 ];
 
+router.use(authRequired);
+
 router.get('/', ctrl.getAllAdmins);
-router.get('/{:email}', ctrl.getAdmin);
+router.get('/{:email}', requireRole("admin"), ctrl.getAdmin);
 router.post('/', validationAdmin, validate, ctrl.createAdmin);
 router.put('/:id', validationAdmin, validate, ctrl.updateAdmin);
 router.delete('/:id', ctrl.deleteAdmin);

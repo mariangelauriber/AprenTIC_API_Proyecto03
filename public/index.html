@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AprenTIC Campus API</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <!--
+    index.html funciona como página de entrada.
+    Si el usuario ya tiene token guardado, lo mandamos al dashboard.
+    Si no tiene token, lo mandamos al login.
+  -->
+
+  <main class="splash-screen">
+    <section class="splash-card">
+      <div class="brand-mark">A</div>
+      <h1>AprenTIC Campus API</h1>
+      <p>Gestión académica multi-campus para alumnos, profesores, proyectos y notas.</p>
+      <a href="./login.html" class="btn btn-primary">Entrar al panel</a>
+    </section>
+  </main>
+
+  <script>
+    const token = localStorage.getItem("aprentic_token");
+
+    if (token) {
+      window.location.href = "./dashboard.html";
+    }
+  </script>
+</body>
+</html>
