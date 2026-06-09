@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const ctrl = require('../controllers/AdminController');
 const validate = require('../middleware/validator');
+const authRequired = require('../middleware/authRequired');
 const { body } = require('express-validator');
+const requireRole = require('../middleware/requireRole');
 
 const validationAdmin = [
   body('nombre').isString().withMessage('Nombre incorrecto').trim().isLength({ min: 2, max: 30 }).withMessage('El nombre debe tener entre 2 y 30 caracteres'),

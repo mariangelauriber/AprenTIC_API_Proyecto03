@@ -1,7 +1,11 @@
 const router = require('express').Router();
-const ctrl = require('../controllers/Profesorcontroller');
+const ctrl = require('../controller/profesorController');
 const validate = require('../middleware/validator');
+const authRequired = require('../middleware/authRequired');
 const { body } = require('express-validator');
+const requireRole = require('../middleware/require_role');
+
+
 
 const validationProfesor = [
     body('nombre').isString().withMessage('Nombre incorrecto').trim().isLength({ min: 2, max: 30 }).withMessage('El nombre debe tener entre 2 y 30 caracteres'),
@@ -11,7 +15,29 @@ const validationProfesor = [
     body('campus').isString().withMessage('Campus incorrecto').trim()
 ];
 
+
+router.use(authRequired);
+
+
+/**
+ * @swagger
+ * /teacher:
+ *   get:
+ *     summary: Lista todos los teachers
+ *     tags: [Teachers]
+ *     responses:
+ *       200:
+ *         description: Lista de teachers
+ *       401:
+ *        description: Sin token
+ *       500:
+ *        description: No tienes permisos para esto
+ */
+
+
 router.get('/{:email}', ctrl.getProfesor);
+
+
 router.get('/', ctrl.getAllProfesores);
 router.post('/', validationProfesor, validate, ctrl.createProfesor);
 router.put('/:id', validationProfesor, validate, ctrl.updateProfesor);
