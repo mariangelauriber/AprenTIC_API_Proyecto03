@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const ctrl = require('../controllers/profesorcontroller');
+const ctrl = require('../controllers/profesorController');
 const validate = require('../middleware/validator');
 
 const authRequired = require('../middleware/authRequired');
@@ -19,8 +19,8 @@ const validationProfesor = [
 router.use(authRequired);
 
 
-router.get('/{:email}', ctrl.getProfesor);
-router.get('/', ctrl.getAllProfesorByEmail);
+router.get('/', ctrl.getProfesor);
+router.get('/:email', ctrl.getProfesorByEmail);
 router.post('/', validationProfesor, validate, ctrl.createProfesor);
 router.put('/:id', validationProfesor, validate, ctrl.updateProfesor);
 router.delete('/:id', ctrl.deleteProfesor);

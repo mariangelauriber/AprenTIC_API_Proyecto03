@@ -15,7 +15,7 @@ const validationAdmin = [
 
 router.use(authRequired);
 
-router.get('/{:email}', ctrl.getAdmin);
+router.get('/:email', ctrl.getAdmin);
 router.post('/', validationAdmin, validate, ctrl.createAdmin);
 router.put('/:id', validationAdmin, validate, ctrl.updateAdmin);
 router.delete('/:id', ctrl.deleteAdmin);

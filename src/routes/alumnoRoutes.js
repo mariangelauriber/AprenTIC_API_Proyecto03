@@ -13,7 +13,7 @@ const validationAlumno = [
 ];
 
 router.get('/', ctrl.getAlumno);
-router.get('/{:email}', ctrl.getAlumnoById);
+router.get('/:email', ctrl.getAlumno);
 router.post('/', validationAlumno, validate, ctrl.createAlumno);
 router.put('/:id', validationAlumno, validate, ctrl.updateAlumno);
 router.delete('/:id', ctrl.deleteAlumno);

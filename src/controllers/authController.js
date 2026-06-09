@@ -33,7 +33,7 @@ exports.login = async (req, res, next) => {
     if (!user) return res.status(401).json({ error: "Credenciales inválidas" });
 
     const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(401).json({ error: "Credenciales mo válidas" });
+    if (!ok) return res.status(401).json({ error: "Credenciales no válidas" });
 
     const token = jwt.sign(
       { sub: user._id, role: user.role },

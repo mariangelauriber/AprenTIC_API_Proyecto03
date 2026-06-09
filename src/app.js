@@ -1,13 +1,12 @@
 const express = require("express");
-const { constant } = require("lodash");
 require("dotenv").config();
 
 const swaggerSchema = require('./docs/swagger');
 const swaggerUi = require('swagger-ui-express');
 
-
 const conectDB = require("./config/db");
 
+const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const profesorRoutes = require("./routes/profesorRoutes");
 const alumnoRoutes = require("./routes/alumnoRoutes");
@@ -30,9 +29,9 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSchema));
 
+app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/profesor", profesorRoutes);
 app.use("/alumno", alumnoRoutes);
@@ -40,10 +39,6 @@ app.use("/curso", cursoRoutes);
 app.use("/proyecto", proyectoRoutes);
 app.use("/nota", notaRoutes);
 
-
-
-
-// 5. 404 (penúltimo)
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 });
