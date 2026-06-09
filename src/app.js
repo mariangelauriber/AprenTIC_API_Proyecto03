@@ -2,6 +2,10 @@ const express = require("express");
 const { constant } = require("lodash");
 require("dotenv").config();
 
+const swaggerSchema = require('./docs/swagger');
+const swaggerUi = require('swagger-ui-express');
+
+
 const conectDB = require("./config/db");
 
 const adminRoutes = require("./routes/adminRoutes");
@@ -25,6 +29,9 @@ function logger(req, res, next) {
   next();
 }
 app.use(logger);
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSchema));
 
 app.use("/admin", adminRoutes);
 app.use("/profesor", profesorRoutes);

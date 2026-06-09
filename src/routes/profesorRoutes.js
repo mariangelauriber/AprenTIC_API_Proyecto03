@@ -1,10 +1,18 @@
 const router = require('express').Router();
+<<<<<<< HEAD
 
 const ctrl = require('../controllers/Profesorcontroller');
 const validate = require('../middleware/validator');
 
+=======
+const ctrl = require('../controller/profesorController');
+const validate = require('../middleware/validator');
+>>>>>>> rocio-backend
 const authRequired = require('../middleware/authRequired');
 const { body } = require('express-validator');
+const requireRole = require('../middleware/require_role');
+
+
 
 const requireRole = require('../middleware/requireRole');
 
@@ -16,10 +24,36 @@ const validationProfesor = [
     body('campus').isString().withMessage('Campus incorrecto').trim()
 ];
 
+<<<<<<< HEAD
 router.use(authRequired);
 
 
 router.get('/{:email}', requireRole("profesor"), ctrl.getProfesor);
+=======
+
+router.use(authRequired);
+
+
+/**
+ * @swagger
+ * /teacher:
+ *   get:
+ *     summary: Lista todos los teachers
+ *     tags: [Teachers]
+ *     responses:
+ *       200:
+ *         description: Lista de teachers
+ *       401:
+ *        description: Sin token
+ *       500:
+ *        description: No tienes permisos para esto
+ */
+
+
+router.get('/{:email}', ctrl.getProfesor);
+
+
+>>>>>>> rocio-backend
 router.get('/', ctrl.getAllProfesores);
 router.post('/', validationProfesor, validate, ctrl.createProfesor);
 router.put('/:id', validationProfesor, validate, ctrl.updateProfesor);

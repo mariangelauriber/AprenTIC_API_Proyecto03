@@ -2,8 +2,12 @@ const router = require('express').Router();
 const ctrl = require('../controllers/AdminController');
 const validate = require('../middleware/validator');
 const authRequired = require('../middleware/authRequired');
+<<<<<<< HEAD
 
+=======
+>>>>>>> rocio-backend
 const { body } = require('express-validator');
+const requireRole = require('../middleware/requireRole');
 
 const requireRole = require('../middleware/requireRole');
 
