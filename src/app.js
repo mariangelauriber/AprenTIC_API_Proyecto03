@@ -40,13 +40,10 @@ app.use("/curso", cursoRoutes);
 app.use("/proyecto", proyectoRoutes);
 app.use("/nota", notaRoutes);
 
-<<<<<<< HEAD
 
 
 
 // 5. 404 (penúltimo)
-=======
->>>>>>> 48478c3166b2a742cbb62f60e23cb3d2227e5a4d
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 });

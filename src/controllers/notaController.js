@@ -11,7 +11,7 @@ exports.getNotaById = async (req, res, next) => {
 };
  
 exports.createNota = async (req,res,next) => {
-  const nota = await noraService.create(req.body);
+  const nota = await notaService.create(req.body);
   res.status(201).json(nota);
   next();
 };

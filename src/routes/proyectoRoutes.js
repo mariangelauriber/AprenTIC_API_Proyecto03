@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ctrl = require('../controllers/ProyectoController');
+const ctrl = require('../controllers/proyectoController');
 const validate = require('../middleware/validator');
 const { body } = require('express-validator');
 
@@ -9,8 +9,8 @@ const validationProyecto = [
   body('curso').optional().isMongoId().withMessage('ID de curso no válido')
 ];
 
-router.get('/', ctrl.getAllProyectos);
-router.get('/:id', ctrl.getProyecto);
+router.get('/', ctrl.getProyectos);
+router.get('/:id', ctrl.getProyectoById);
 router.post('/', validationProyecto, validate, ctrl.createProyecto);
 router.put('/:id', validationProyecto, validate, ctrl.updateProyecto);
 router.delete('/:id', ctrl.deleteProyecto);

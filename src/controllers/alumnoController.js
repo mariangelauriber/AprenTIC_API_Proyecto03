@@ -7,7 +7,7 @@ try {
             if (!alumno) return res.status(404).json({ error: 'ALumno no encontrado con ese email' });
             return res.json(alumno);
         }
-        const alumno = await adminService.getAll();
+        const alumno = await alumnoService.getAll();
         res.json(alumno);
     } catch (err) {
         next(err);

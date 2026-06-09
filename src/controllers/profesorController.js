@@ -5,7 +5,7 @@ const getProfesor = async (req, res, next) => {
   res.json(profesor);
 };
 
-exports.getProfesor = async (req, res, next) => {
+exports.getProfesorByEmail = async (req, res, next) => {
   try {
     if (req.params.email) {
       const profesor = await profesorService.getProfesorPByEmail(
@@ -30,7 +30,7 @@ exports.createProfesor = async (req, res, next) => {
   next();
 };
 
-exports.updateTeacher = async (req, res, next) => {
+exports.updateProfesor = async (req, res, next) => {
   try {
     const updatedProfesor = await profesorService.actualizarProfesor(
       req.params.id,

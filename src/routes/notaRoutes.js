@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ctrl = require('../controllers/NotaController');
+const ctrl = require('../controllers/notaController');
 const validate = require('../middleware/validator');
 const { body } = require('express-validator');
 
@@ -11,8 +11,8 @@ const validationNota = [
   body('observaciones').optional().isString().withMessage('Observaciones incorrectas').trim()
 ];
 
-router.get('/', ctrl.getAllNotas);
-router.get('/:id', ctrl.getNota);
+router.get('/', ctrl.getNotas);
+router.get('/:id', ctrl.getNotaById);
 router.post('/', validationNota, validate, ctrl.createNota);
 router.put('/:id', validationNota, validate, ctrl.updateNota);
 router.delete('/:id', ctrl.deleteNota);
