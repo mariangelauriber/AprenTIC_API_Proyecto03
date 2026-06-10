@@ -38,7 +38,10 @@ exports.login = async (req, res, next) => {
 
     if (!user) return res.status(401).json({ error: "Credenciales inválidas" });
 
-    const ok = await bcrypt.compare(password, user.password);
+    const esBcrypt = /^\$2[ab]\$/.test(user.password);
+    const ok = esBcrypt
+      ? await bcrypt.compare(password, user.password)
+      : password === user.password;
     if (!ok) return res.status(401).json({ error: "Credenciales no válidas" });
 
     const token = jwt.sign(
