@@ -1,26 +1,38 @@
 /* =========================================================
-   AprenTIC Dashboard - CSS corto y fácil de estudiar
-   Objetivo: mantener diseño limpio con menos código.
+   AprenTIC Dashboard — styles.css
+   Paleta inspirada en Platzi: fondo oscuro + verde lima
    ========================================================= */
 
 :root {
-  --blue: #2563eb;
-  --blue-dark: #1d4ed8;
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --text: #172033;
-  --muted: #64748b;
-  --border: #e5e7eb;
-  --danger: #dc2626;
-  --danger-bg: #fee2e2;
-  --radius: 16px;
-  --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  /* Paleta principal */
+  --green:         #98ca3f;   /* verde Platzi */
+  --green-dark:    #7db833;   /* verde hover */
+  --green-subtle:  rgba(152, 202, 63, 0.12);  /* fondo activo sutil */
+  --purple:        #6c47ff;   /* acento secundario */
+
+  /* Fondos (oscuros) */
+  --bg:            #0f0f0f;   /* fondo de página */
+  --card:          #1a1a1a;   /* tarjetas y sidebar */
+  --surface:       #242424;   /* inputs, checklist items */
+
+  /* Texto */
+  --text:          #f0f0f0;
+  --muted:         #8a9bb0;
+
+  /* Bordes */
+  --border:        #2d2d2d;
+
+  /* Peligro / error */
+  --danger:        #f04438;
+  --danger-bg:     #2d1010;
+
+  /* Geometría */
+  --radius:        16px;
+  --radius-sm:     10px;
+  --shadow:        0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-/* Reset básico */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -29,49 +41,163 @@ body {
   color: var(--text);
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
+button, input, select, textarea { font: inherit; }
 
-/* Botones e inputs generales */
-input,
-select,
-textarea,
-button {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0 14px;
-  border-radius: 10px;
-}
+/* =========================================================
+   UTILITIES
+   ========================================================= */
 
-input,
-select,
-textarea {
-  border: 1px solid var(--border);
-  background: #fff;
-}
+.hidden { display: none; }
 
-button {
-  border: 0;
-  background: var(--blue);
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background: var(--blue-dark);
-}
-
-.hidden {
-  display: none;
+.muted {
+  color: var(--muted);
+  margin: 0;
 }
 
 /* =========================================================
-   LOGIN
+   BUTTONS
+   ========================================================= */
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 0;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #0f0f0f;
+}
+
+.btn-primary:hover {
+  background: var(--green-dark);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--danger-bg);
+}
+
+.btn-full {
+  width: 100%;
+  display: block;
+}
+
+/* =========================================================
+   FORM INPUTS
+   ========================================================= */
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 6px 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+}
+
+select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--green);
+  outline-offset: 0;
+  border-color: var(--green);
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* =========================================================
+   MESSAGE / ALERT
+   ========================================================= */
+
+.message {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--danger-bg);
+  color: var(--danger);
+  margin-bottom: 16px;
+  font-size: 14px;
+  border: 1px solid var(--danger);
+}
+
+/* =========================================================
+   BRAND MARK  (el cuadrado con la "A")
+   ========================================================= */
+
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  background: var(--green);
+  color: #0f0f0f;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   SPLASH  (index.html)
+   ========================================================= */
+
+.splash-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.splash-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 60px 48px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  max-width: 480px;
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
+.splash-card .brand-mark {
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  margin: 0 auto 24px;
+}
+
+.splash-card h1 { margin: 0 0 12px; }
+.splash-card p  { color: var(--muted); margin: 0 0 28px; }
+
+/* =========================================================
+   LOGIN  (login.html)
    ========================================================= */
 
 .login-layout {
@@ -80,184 +206,408 @@ button:hover {
   grid-template-columns: 1fr 420px;
 }
 
-.login-info {
+/* Panel izquierdo — hero */
+.login-hero {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 80px;
-  background: var(--blue);
-  color: #fff;
+  background: #111111;
+  color: var(--text);
+  border-right: 1px solid var(--border);
 }
 
-.login-info h1 {
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.login-hero h1 {
   margin: 0 0 16px;
-  font-size: 52px;
+  font-size: 36px;
+  line-height: 1.2;
+  color: var(--text);
 }
 
-.login-info p {
-  max-width: 620px;
-  font-size: 18px;
+.login-hero h1 span {
+  color: var(--green);
+}
+
+.login-hero > p {
+  margin: 0 0 40px;
+  font-size: 16px;
   line-height: 1.6;
+  color: var(--muted);
 }
 
-.login-card {
+.feature-list {
   display: flex;
   flex-direction: column;
+  gap: 16px;
+}
+
+.feature-list article {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--green);
+  background: var(--green-subtle);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.feature-list strong { font-size: 14px; color: var(--text); }
+.feature-list span   { font-size: 13px; color: var(--muted); }
+
+/* Panel derecho — formulario */
+.login-panel {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 48px;
   background: var(--card);
 }
 
-.message {
-  padding: 12px;
-  border-radius: 10px;
-  background: var(--danger-bg);
-  color: var(--danger);
+.login-card {
+  padding: 48px;
+  width: 100%;
 }
 
+.login-card h2 { margin: 0 0 6px; color: var(--text); }
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.demo-box {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.demo-box strong { font-size: 13px; color: var(--green); }
+.demo-box span   { color: var(--muted); }
+
 /* =========================================================
-   DASHBOARD
+   DASHBOARD  (dashboard.html)
    ========================================================= */
 
-.dashboard {
+.app-shell {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 260px 1fr;
 }
 
+/* --- Sidebar --- */
+
 .sidebar {
+  display: flex;
+  flex-direction: column;
   padding: 24px;
   background: var(--card);
   border-right: 1px solid var(--border);
 }
 
-.sidebar h2 {
-  margin-top: 0;
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
 }
 
-.nav,
-.logout {
+.sidebar-brand strong { display: block; font-size: 15px; color: var(--text); }
+.sidebar-brand span   { display: block; font-size: 12px; color: var(--muted); }
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
   text-align: left;
   background: transparent;
   color: var(--muted);
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
 }
 
-.nav.active,
-.nav:hover {
-  background: #dbeafe;
-  color: var(--blue-dark);
+.nav-link.active,
+.nav-link:hover {
+  background: var(--green-subtle);
+  color: var(--green);
 }
 
-.logout {
-  margin-top: 30px;
-  color: var(--danger);
+/* --- Main content --- */
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
-.content {
-  padding: 32px;
+.topbar {
+  padding: 32px 40px 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
 }
 
-header {
-  margin-bottom: 24px;
+.topbar h1 { margin: 4px 0 6px; font-size: 24px; color: var(--text); }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0;
 }
 
-header h1 {
-  margin-bottom: 6px;
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-top: 6px;
 }
 
-/* Cards del resumen */
-.cards {
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--green);
+}
+
+/* --- Page sections --- */
+
+.page-section {
+  display: none;
+  padding: 32px 40px;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-section.active {
+  display: flex;
+}
+
+/* --- Metrics grid --- */
+
+.metrics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  gap: 16px;
 }
 
-.cards article,
-.section,
-.list article {
+.metric-card {
   background: var(--card);
   border-radius: var(--radius);
   padding: 22px;
   box-shadow: var(--shadow);
-}
-
-.cards span {
-  display: block;
-  color: var(--muted);
-}
-
-.cards strong {
-  display: block;
-  margin-top: 8px;
-  font-size: 36px;
-}
-
-/* Secciones */
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
-
-/* Formularios */
-.form {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.form button {
-  align-self: end;
-}
-
-/* Listados */
-.list {
-  display: grid;
-  gap: 12px;
-}
-
-.list article {
+  border: 1px solid var(--border);
   display: flex;
+  flex-direction: column;
+}
+
+.metric-card span   { font-size: 13px; color: var(--muted); }
+.metric-card strong { font-size: 36px; margin: 4px 0; display: block; color: var(--green); }
+.metric-card small  { font-size: 12px; color: var(--muted); }
+
+/* --- Content card --- */
+
+.content-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+/* --- Section header --- */
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
 }
 
-.list small {
+.section-header h2 { margin: 0 0 4px; color: var(--text); }
+.section-header p  { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* --- Checklist grid --- */
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.checklist-grid article {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.checklist-grid strong { font-size: 14px; color: var(--text); }
+.checklist-grid span   { font-size: 13px; color: var(--muted); }
+
+/* --- Content grid --- */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* --- Form grid --- */
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-grid h3 { margin: 0 0 16px; font-size: 16px; color: var(--text); }
+
+/* --- Table card --- */
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.table-header h3 { margin: 0; font-size: 16px; color: var(--text); }
+
+.table-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- Badge --- */
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-neutral {
+  background: var(--surface);
   color: var(--muted);
+  border: 1px solid var(--border);
 }
 
-.delete {
-  max-width: 120px;
-  background: var(--danger-bg);
-  color: var(--danger);
+/* --- Analytics --- */
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-pre {
-  overflow-x: auto;
-  white-space: pre-wrap;
+.analytics-grid h3 { margin: 0 0 16px; font-size: 16px; color: var(--text); }
+
+.analytics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--muted);
 }
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
 
+@media (max-width: 1200px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 900px) {
-  .login-layout,
-  .dashboard {
+  .login-layout {
     grid-template-columns: 1fr;
   }
 
-  .login-info,
-  .login-card,
-  .content {
-    padding: 28px;
+  .login-hero {
+    padding: 48px 32px;
   }
 
-  .cards,
-  .form {
+  .login-panel {
+    padding: 0;
+  }
+
+  .login-card {
+    padding: 32px;
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .topbar,
+  .page-section {
+    padding: 20px 24px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid,
+  .checklist-grid,
+  .analytics-grid {
     grid-template-columns: 1fr;
   }
 }
