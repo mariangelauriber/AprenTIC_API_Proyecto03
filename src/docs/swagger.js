@@ -14,6 +14,7 @@ const options = {
         bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       },
     },
+    security: [{ bearerAuth: [] }],
   },
   apis: ['./src/routes/*.js'],   
 };

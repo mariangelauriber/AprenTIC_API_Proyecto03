@@ -1,8 +1,8 @@
 const express = require("express");
 require("dotenv").config();
 
-const swaggerSchema = require('./docs/swagger');
-const swaggerUi = require('swagger-ui-express');
+const swaggerSchema = require("./docs/swagger");
+const swaggerUi = require("swagger-ui-express");
 
 const conectDB = require("./config/db");
 
@@ -14,12 +14,12 @@ const cursoRoutes = require("./routes/cursoRoutes");
 const proyectoRoutes = require("./routes/proyectoRoutes");
 const notaRoutes = require("./routes/notaRoutes");
 
-const path = require('path');
+const path = require("path");
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
-app.get('/', (req, res) => res.redirect('/login.html'));
+app.use(express.static(path.join(__dirname, "../public")));
+app.get("/", (req, res) => res.redirect("/login.html"));
 
 conectDB();
 
@@ -29,7 +29,7 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSchema));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSchema));
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
