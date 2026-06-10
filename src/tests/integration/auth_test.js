@@ -40,7 +40,7 @@ describe('POST /auth/register', () => {
     });
 });
 
-/* describe('POST /auth/login', () => {
+describe('POST /auth/login', () => {
     it('devuelve un token con credenciales correctas', async () => {
         await request(app)
           .post('/auth/register')
@@ -51,4 +51,4 @@ describe('POST /auth/register', () => {
         expect(res.status).toBe(200);
         expect(res.body.token).toBeDefined();
     });
-}); */
+}); 
