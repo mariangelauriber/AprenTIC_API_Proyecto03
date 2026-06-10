@@ -1,10 +1,8 @@
 const express = require("express");
-require("dotenv").config();
-
+const { constant } = require("lodash");
 const swaggerSchema = require("./docs/swagger");
 const swaggerUi = require("swagger-ui-express");
 
-const conectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -18,10 +16,7 @@ const path = require("path");
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../public")));
-app.get("/", (req, res) => res.redirect("/login.html"));
 
-conectDB();
 
 function logger(req, res, next) {
   console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
@@ -29,7 +24,9 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSchema));
+
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
@@ -50,5 +47,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Servidor levantado en " + PORT));
+module.exports = app; 
