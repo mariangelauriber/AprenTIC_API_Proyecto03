@@ -1,16 +1,18 @@
 const profesorService = require("../services/profesorService");
 
-const getProfesor = async (req, res, next) => {
-  const profesor = await profesorService.getAll();
-  res.json(profesor);
+exports.getProfesor = async (req, res, next) => {
+  try {
+    const profesor = await profesorService.getAll();
+    res.json(profesor);
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.getProfesorByEmail = async (req, res, next) => {
   try {
     if (req.params.email) {
-      const profesor = await profesorService.getProfesorPByEmail(
-        req.params.email,
-      );
+      const profesor = await profesorService.getByEmail(req.params.email);
       if (!profesor)
         return res
           .status(404)
@@ -25,14 +27,17 @@ exports.getProfesorByEmail = async (req, res, next) => {
 };
 
 exports.createProfesor = async (req, res, next) => {
-  const profesor = await profesorService.create(req.body);
-  res.status(201).json(profesor);
-  next();
+  try {
+    const profesor = await profesorService.create(req.body);
+    res.status(201).json(profesor);
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.updateProfesor = async (req, res, next) => {
   try {
-    const updatedProfesor = await profesorService.actualizarProfesor(
+    const updatedProfesor = await profesorService.update(
       req.params.id,
       req.body,
     );
@@ -46,7 +51,7 @@ exports.updateProfesor = async (req, res, next) => {
 
 exports.deleteProfesor = async (req, res, next) => {
   try {
-    const deleteProfesor = await profesorService.deleteProfesor(req.params.id);
+    const deleteProfesor = await profesorService.delete(req.params.id);
     if (!deleteProfesor)
       return res.status(404).json({ error: "Profesor no encontrado" });
     res.json(deleteProfesor);

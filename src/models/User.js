@@ -1,11 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+const userSchema = new mongoose.Schema(
+  {
+    nombre: { type: String, required: true },
+    apellidos: { type: String },
+    email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true },
-    name: { type: String, required: true, trim: true },
-    role: { type: String, enum: ['admin', 'profesor', 'user'], default: 'user' },
-}, { timestamps: true });
+    role: {
+      type: String,
+      enum: ["admin", "profesor", "user"],
+      default: "user",
+    },
+    especialidad: { type: String },
+    campus: { type: String },
+    cursos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Curso" }],
+  },
+  { timestamps: true },
+);
 
-module.exports = mongoose.model('User', userSchema, 'user');
->>>>>>> rocio-backend
+module.exports = mongoose.model("User", userSchema, "user");

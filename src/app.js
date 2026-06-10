@@ -2,9 +2,8 @@ const express = require("express");
 const { constant } = require("lodash");
 require("dotenv").config();
 
-const swaggerSchema = require('./docs/swagger');
-const swaggerUi = require('swagger-ui-express');
-
+const swaggerSchema = require("./docs/swagger");
+const swaggerUi = require("swagger-ui-express");
 
 const conectDB = require("./config/db");
 
@@ -14,13 +13,14 @@ const alumnoRoutes = require("./routes/alumnoRoutes");
 const cursoRoutes = require("./routes/cursoRoutes");
 const proyectoRoutes = require("./routes/proyectoRoutes");
 const notaRoutes = require("./routes/notaRoutes");
+const authRoutes = require("./routes/authRoutes");
 
-const path = require('path');
+const path = require("path");
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
-app.get('/', (req, res) => res.redirect('/login.html'));
+app.use(express.static(path.join(__dirname, "../public")));
+app.get("/", (req, res) => res.redirect("/login.html"));
 
 conectDB();
 
@@ -30,8 +30,7 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSchema));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSchema));
 
 app.use("/admin", adminRoutes);
 app.use("/profesor", profesorRoutes);
@@ -39,9 +38,7 @@ app.use("/alumno", alumnoRoutes);
 app.use("/curso", cursoRoutes);
 app.use("/proyecto", proyectoRoutes);
 app.use("/nota", notaRoutes);
-
-
-
+app.use("/auth", authRoutes);
 
 // 5. 404 (penúltimo)
 app.use((req, res) => {
