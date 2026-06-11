@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const ctrl = require('../controllers/cursoController');
+const authRequired = require('../middleware/authRequired'); 
+const requireRole = require('../middleware/requireRole'); 
 const validate = require('../middleware/validator');
 const { body } = require('express-validator');
 
@@ -12,10 +14,10 @@ const validationCurso = [
   body('profesor').optional().isMongoId().withMessage('ID de profesor no válido')
 ];
 
-router.get('/', ctrl.getCursos);
-router.get('/:id', ctrl.getCursoById);
-router.post('/', validationCurso, validate, ctrl.createCurso);
-router.put('/:id', validationCurso, validate, ctrl.updateCurso);
-router.delete('/:id', ctrl.deleteCurso);
+router.get('/', authRequired, ctrl.getCursos);
+router.get('/:id', authRequired, ctrl.getCursoById);
+router.post('/', authRequired, requireRole('admin'), validationCurso, validate, ctrl.createCurso);
+router.put('/:id', authRequired, requireRole('admin'), validationCurso, validate, ctrl.updateCurso);
+router.delete('/:id', authRequired, requireRole('admin'), ctrl.deleteCurso);
 
 module.exports = router;

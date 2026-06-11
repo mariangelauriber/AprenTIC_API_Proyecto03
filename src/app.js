@@ -1,8 +1,8 @@
 const express = require("express");
-const { constant } = require("lodash");
+const cors = require("cors");
+
 const swaggerSchema = require("./docs/swagger");
 const swaggerUi = require("swagger-ui-express");
-
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -15,8 +15,10 @@ const notaRoutes = require("./routes/notaRoutes");
 const path = require("path");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-
+app.use(express.static(path.join(__dirname, "../public")));
+app.get("/", (req, res) => res.redirect("/login.html"));
 
 function logger(req, res, next) {
   console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
@@ -24,9 +26,7 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
-
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSchema));
-
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
@@ -47,4 +47,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app; 
+module.exports = app;

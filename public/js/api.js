@@ -1,4 +1,4 @@
-const API_BASE_URL = "";
+const API_BASE_URL = "http://localhost:3000";
 
 async function apiRequest(path, options = {}) {
   const token = localStorage.getItem("aprentic_token");
@@ -22,7 +22,14 @@ async function apiRequest(path, options = {}) {
     : await response.text();
 
   if (!response.ok) {
-    const message = data && data.error ? data.error : "Error en la peticion";
+    // data.error -> errores normales del backend (ej: "Credenciales inválidas")
+    // data.errors -> array que devuelve express-validator (ej: "Email no válido")
+    let message = "Error en la peticion";
+    if (data && data.error) {
+      message = data.error;
+    } else if (data && data.errors && data.errors.length > 0) {
+      message = data.errors[0].msg;
+    }
     throw new Error(message);
   }
 

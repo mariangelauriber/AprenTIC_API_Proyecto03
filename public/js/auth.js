@@ -22,7 +22,7 @@ if (loginForm) {
 
       localStorage.setItem("aprentic_token", data.token);
       localStorage.setItem("aprentic_user", JSON.stringify(data.user));
-      window.location.href = "/dashboard.html";
+      window.location.href = "./dashboard.html";
     } catch (error) {
       showLoginMessage(error.message);
     }

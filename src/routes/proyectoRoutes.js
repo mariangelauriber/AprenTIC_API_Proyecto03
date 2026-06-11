@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const ctrl = require('../controllers/proyectoController');
+const authRequired = require('../middleware/authRequired'); // verifica el JWT
+const requireRole = require('../middleware/requireRole');
 const validate = require('../middleware/validator');
 const { body } = require('express-validator');
 
@@ -10,10 +12,10 @@ const validationProyecto = [
   body('curso').optional().isMongoId().withMessage('ID de curso no válido')
 ];
 
-router.get('/', ctrl.getProyectos);
-router.get('/:id', ctrl.getProyectoById);
-router.post('/', validationProyecto, validate, ctrl.createProyecto);
-router.put('/:id', validationProyecto, validate, ctrl.updateProyecto);
-router.delete('/:id', ctrl.deleteProyecto);
+router.get('/', authRequired, ctrl.getProyectos);
+router.get('/:id', authRequired, ctrl.getProyectoById);
+router.post('/', authRequired, requireRole('admin'), validationProyecto, validate, ctrl.createProyecto);
+router.put('/:id', authRequired, requireRole('admin'), validationProyecto, validate, ctrl.updateProyecto);
+router.delete('/:id', authRequired, requireRole('admin'), ctrl.deleteProyecto);
 
 module.exports = router;
