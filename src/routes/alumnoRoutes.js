@@ -16,7 +16,7 @@ const validationAlumno = [
 
 /**
  * @swagger
- * /alumnos:
+ * /alumno:
  *   get:
  *     summary: Lista todos los alumnos
  *     tags: [Alumnos]
