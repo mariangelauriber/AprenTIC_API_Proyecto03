@@ -27,6 +27,42 @@ const reglasLogin = [
   body("password").notEmpty().withMessage("La contraseña es obligatoria"),
 ];
 
+/** 
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Registra un nuevo usuario
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password, nombre]
+ *             properties:
+ *               email: {type: string, example: "admin@aprentic.es"}
+ *               password: {type: string, example: "admin1234"}
+ *               nombre: {type: string, example: "John"}
+ *               apellidos: {type: string, example: "Doe"}
+ *               rol: {type: string, example: "user"}
+ *           example:
+ *             email: admin@aprentic.es
+ *             password: admin1234
+ *             nombre: John
+ *             apellidos: Doe
+ *             rol: user
+ *     responses:
+ *       201:
+ *         description: Usuario registrado correctamente
+ *       400:
+ *         description: Datos inválidos
+ *       409:
+ *         description: Email ya registrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+
 router.post("/register", reglasRegistro, validate, ctrl.register);
 
 /**
