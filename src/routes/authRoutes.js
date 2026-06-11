@@ -45,13 +45,13 @@ const reglasLogin = [
  *               password: {type: string, example: "admin1234"}
  *               nombre: {type: string, example: "John"}
  *               apellidos: {type: string, example: "Doe"}
- *               rol: {type: string, example: "user"}
+ *               rol: {type: string, example: "admin"}
  *           example:
  *             email: admin@aprentic.es
  *             password: admin1234
  *             nombre: John
  *             apellidos: Doe
- *             rol: user
+ *             rol: admin
  *     responses:
  *       201:
  *         description: Usuario registrado correctamente
