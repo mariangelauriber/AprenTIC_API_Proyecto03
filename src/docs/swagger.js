@@ -8,7 +8,7 @@ const options = {
       version: '1.0.0',
       description: 'CRUD de recursos con autenticación JWT',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers: [{ url: '/' }],
     components: {
       securitySchemes: {
         bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },

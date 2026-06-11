@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const ctrl = require('../controllers/notaController');
+const authRequired = require('../middleware/authRequired'); 
+const requireRole = require('../middleware/requireRole');
 const validate = require('../middleware/validator');
 const { body } = require('express-validator');
 
@@ -12,10 +14,10 @@ const validationNota = [
   body('observaciones').optional().isString().withMessage('Observaciones incorrectas').trim()
 ];
 
-router.get('/', ctrl.getNotas);
-router.get('/:id', ctrl.getNotaById);
-router.post('/', validationNota, validate, ctrl.createNota);
-router.put('/:id', validationNota, validate, ctrl.updateNota);
-router.delete('/:id', ctrl.deleteNota);
+router.get('/', authRequired, requireRole('admin', 'profesor'), ctrl.getNotas);
+router.get('/:id',authRequired, requireRole('admin', 'profesor'), ctrl.getNotaById);
+router.post('/', authRequired, requireRole('admin', 'profesor'), validationNota, validate, ctrl.createNota);
+router.put('/:id', authRequired, requireRole('admin', 'profesor'), validationNota, validate, ctrl.updateNota);
+router.delete('/:id', authRequired, requireRole('admin', 'profesor'), ctrl.deleteNota);
 
 module.exports = router;
