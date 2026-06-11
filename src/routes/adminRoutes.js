@@ -33,6 +33,27 @@ router.use(authRequired);
 /**
  * @swagger
  * /admin:
+ *   get:
+ *     summary: Busca admin por email
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         example: admin@aprentic.es
+ *     responses:
+ *       200:
+ *         description: Admin encontrado
+ *       401:
+ *         description: Sin token
+ *       404:
+ *         description: Admin no encontrado
+ */
+
+/**
+ * @swagger
+ * /admin:
  *   post:
  *     summary: Crea un admin
  *     tags: [Admin]
@@ -55,6 +76,63 @@ router.use(authRequired);
  *         description: Datos inválidos
  *       401:
  *         description: Sin token
+ */
+
+/**
+ * @swagger
+ * /admin/{id}:
+ *   put:
+ *     summary: Actualiza un admin
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: 665f1a2b3c4d5e6f78901234
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre: {type: string, example: "Carlos"}
+ *               apellidos: {type: string, example: "Martínez López"}
+ *               email: {type: string, example: "admin@aprentic.es"}
+ *               password: {type: string, example: "admin1234"}
+ *     responses:
+ *       200:
+ *         description: Admin actualizado
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: Sin token
+ *       404:
+ *         description: Admin no encontrado
+ */
+
+/**
+ * @swagger
+ * /admin/{id}:
+ *   delete:
+ *     summary: Elimina un admin
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: 665f1a2b3c4d5e6f78901234
+ *     responses:
+ *       200:
+ *         description: Admin eliminado
+ *       401:
+ *         description: Sin token
+ *       404:
+ *         description: Admin no encontrado
  */
 
 router.get("/:email", ctrl.getAdmin);

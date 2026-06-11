@@ -42,6 +42,115 @@ router.use(authRequired);
  *         description: Sin token
  */
 
+/**
+ * @swagger
+ * /profesor/{email}:
+ *   get:
+ *     summary: Busca profesor por email
+ *     tags: [Profesor]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: profesor@aprentic.es
+ *     responses:
+ *       200:
+ *         description: Profesor encontrado
+ *       401:
+ *         description: Sin token
+ *       404:
+ *         description: Profesor no encontrado
+ */
+
+/**
+ * @swagger
+ * /profesor:
+ *   post:
+ *     summary: Crea un profesor
+ *     tags: [Profesor]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nombre, apellidos, email, especialidad, campus]
+ *             properties:
+ *               nombre: {type: string, example: "Laura"}
+ *               apellidos: {type: string, example: "Gómez Ruiz"}
+ *               email: {type: string, example: "profesor@aprentic.es"}
+ *               especialidad: {type: string, example: "Desarrollo Web"}
+ *               campus: {type: string, example: "Sevilla"}
+ *     responses:
+ *       201:
+ *         description: Profesor creado
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: Sin token
+ */
+
+/**
+ * @swagger
+ * /profesor/{id}:
+ *   put:
+ *     summary: Actualiza un profesor
+ *     tags: [Profesor]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: 665f1a2b3c4d5e6f78901234
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nombre, apellidos, email, especialidad, campus]
+ *             properties:
+ *               nombre: {type: string, example: "Laura"}
+ *               apellidos: {type: string, example: "Gómez Ruiz"}
+ *               email: {type: string, example: "profesor@aprentic.es"}
+ *               especialidad: {type: string, example: "Desarrollo Web"}
+ *               campus: {type: string, example: "Sevilla"}
+ *     responses:
+ *       200:
+ *         description: Profesor actualizado
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: Sin token
+ *       404:
+ *         description: Profesor no encontrado
+ */
+
+/**
+ * @swagger
+ * /profesor/{id}:
+ *   delete:
+ *     summary: Elimina un profesor
+ *     tags: [Profesor]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: 665f1a2b3c4d5e6f78901234
+ *     responses:
+ *       200:
+ *         description: Profesor eliminado
+ *       401:
+ *         description: Sin token
+ *       404:
+ *         description: Profesor no encontrado
+ */
+
 router.get("/", ctrl.getProfesor);
 router.get("/:email", ctrl.getProfesorByEmail);
 router.post("/", validationProfesor, validate, ctrl.createProfesor);

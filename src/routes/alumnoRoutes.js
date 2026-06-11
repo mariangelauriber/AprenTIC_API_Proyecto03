@@ -14,6 +14,39 @@ const validationAlumno = [
 
 router.get('/', ctrl.getAlumno);
 router.get('/:email', ctrl.getAlumno);
+
+/**
+ * @swagger
+ * /alumnos:
+ *   get:
+ *     summary: Lista todos los alumnos
+ *     tags: [Alumnos]
+ *     responses:
+ *       200:
+ *         description: Lista de alumnos
+ *       401:
+ *         description: Sin token
+ *       403:
+ *         description: No tienes permisos
+ *       500:
+ *         description: Error del servidor
+ *
+ *   post:
+ *     summary: Crea un alumno
+ *     tags: [Alumnos]
+ *     responses:
+ *       201:
+ *         description: Alumno creado
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: Sin token
+ *       409:
+ *         description: Alumno ya existe
+ *       500:
+ *         description: Error del servidor
+ */
+
 router.post('/', validationAlumno, validate, ctrl.createAlumno);
 router.put('/:id', validationAlumno, validate, ctrl.updateAlumno);
 router.delete('/:id', ctrl.deleteAlumno);
