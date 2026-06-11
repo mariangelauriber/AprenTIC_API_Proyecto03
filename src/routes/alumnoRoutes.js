@@ -14,6 +14,38 @@ const validationAlumno = [
   body('curso').optional().isMongoId().withMessage('ID de curso no válido')
 ];
 
+/**
+ * @swagger
+ * /alumnos:
+ *   get:
+ *     summary: Lista todos los alumnos
+ *     tags: [Alumnos]
+ *     responses:
+ *       200:
+ *         description: Lista de alumnos
+ *       401:
+ *         description: Sin token
+ *       403:
+ *         description: No tienes permisos
+ *       500:
+ *         description: Error del servidor
+ *
+ *   post:
+ *     summary: Crea un alumno
+ *     tags: [Alumnos]
+ *     responses:
+ *       201:
+ *         description: Alumno creado
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: Sin token
+ *       409:
+ *         description: Alumno ya existe
+ *       500:
+ *         description: Error del servidor
+ */
+
 router.get('/',  authRequired, requireRole('admin', 'profesor'), ctrl.getAlumno);
 router.get('/:email', authRequired, requireRole('admin', 'profesor'), ctrl.getAlumno);
 router.post('/', authRequired, requireRole('admin'), validationAlumno, validate, ctrl.createAlumno);
