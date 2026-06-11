@@ -9,10 +9,13 @@
 <body>
   <!--
     Dashboard principal.
-    Este archivo no contiene lógica pesada.
-    La lógica de llamadas al backend está en:
-    - js/api.js
-    - js/dashboard.js
+    Expone el 100% de los endpoints de la API:
+    - GET listar (tablas) y GET por email/ID (buscadores)
+    - POST crear (formularios)
+    - PUT actualizar (botón Editar -> el formulario pasa a modo edición)
+    - DELETE eliminar (botón Eliminar)
+    - Analytics (agregaciones)
+    La lógica está en js/api.js y js/dashboard.js
   -->
 
   <div class="app-shell">
@@ -33,6 +36,7 @@
         <button class="nav-link" data-section="promociones">Promociones</button>
         <button class="nav-link" data-section="proyectos">Proyectos</button>
         <button class="nav-link" data-section="notas">Notas</button>
+        <button class="nav-link" data-section="admins">Admins</button>
         <button class="nav-link" data-section="analytics">Analytics</button>
       </nav>
 
@@ -45,20 +49,18 @@
         <div>
           <p class="eyebrow">Proyecto Integrador</p>
           <h1>AprenTIC Campus API</h1>
-          <p class="muted">
-            Panel visual conectado a tu backend de Node.js, Express y MongoDB Atlas.
-          </p>
+          <p class="muted">Gestión académica multi-campus</p>
         </div>
 
         <div class="status-pill">
           <span class="status-dot"></span>
-          API local
+          <span id="usuarioPill">API</span>
         </div>
       </header>
 
       <div id="globalMessage" class="message hidden"></div>
 
-      <!-- Resumen general -->
+      <!-- ================= RESUMEN ================= -->
       <section id="section-overview" class="page-section active">
         <div class="metrics-grid">
           <article class="metric-card">
@@ -85,60 +87,42 @@
             <small>Entregas evaluables</small>
           </article>
         </div>
-
-        <section class="content-card">
-          <div class="section-header">
-            <div>
-              <h2>Estado del proyecto</h2>
-              <p>
-                Este dashboard sirve para demostrar visualmente el funcionamiento del backend:
-                CRUD, conexión con MongoDB y endpoints analíticos.
-              </p>
-            </div>
-          </div>
-
-          <div class="checklist-grid">
-            <article>
-              <strong>Backend</strong>
-              <span>Express + MongoDB Atlas + Mongoose.</span>
-            </article>
-            <article>
-              <strong>Frontend</strong>
-              <span>HTML, CSS y JavaScript sin frameworks.</span>
-            </article>
-            <article>
-              <strong>API REST</strong>
-              <span>Rutas bajo el prefijo /api.</span>
-            </article>
-          </div>
-        </section>
       </section>
 
-      <!-- Alumnos -->
+      <!-- ================= ALUMNOS ================= -->
       <section id="section-alumnos" class="page-section">
         <div class="section-header">
           <div>
             <h2>Alumnos</h2>
-            <p>Crear, listar y eliminar alumnos registrados en la API.</p>
+            <p>Busca, crea, edita y administra los alumnos del campus.</p>
           </div>
-          <button class="btn btn-primary" data-reload="alumnos">Actualizar</button>
+          <button class="btn btn-primary" data-reload="alumno">Actualizar</button>
         </div>
+
+        <!-- Buscador: GET /alumno/:email -->
+        <form id="alumnoBuscarForm" class="content-card search-bar" data-recurso="alumno">
+          <input name="clave" type="email" placeholder="Buscar alumno por email" required />
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <button class="btn btn-secondary" type="button" data-clear="alumno">Limpiar</button>
+        </form>
+        <div id="alumnoBuscarResultado" class="search-result"></div>
 
         <section class="content-grid">
           <form id="alumnoForm" class="content-card form-grid">
-            <h3>Nuevo alumno</h3>
+            <h3 id="alumnoFormTitulo">Nuevo alumno</h3>
+            <!-- Banner que aparece cuando el formulario está en modo edición (PUT) -->
+            <div id="alumnoEditBanner" class="edit-banner hidden"></div>
 
             <label>Nombre<input name="nombre" required /></label>
             <label>Apellidos<input name="apellidos" required /></label>
             <label>Email<input type="email" name="email" required /></label>
-            <label>Password<input type="password" name="password" value="Alumno123" required /></label>
+            <label>Password<input type="password" name="password" placeholder="Solo al crear" /></label>
             <label>Edad<input type="number" name="edad" min="16" max="99" /></label>
-            <label>Campus<input name="campus" placeholder="Sevilla Centro" /></label>
-
-            <!-- Si tu backend exige curso ObjectId, puedes pegarlo aquí. Si no, déjalo vacío. -->
+            <label>Campus<input name="campus" placeholder="Sevilla" /></label>
             <label>Curso ID opcional<input name="curso" placeholder="ObjectId de curso/promoción" /></label>
 
-            <button class="btn btn-primary" type="submit">Crear alumno</button>
+            <button class="btn btn-primary" type="submit" id="alumnoSubmit">Crear alumno</button>
+            <button class="btn btn-secondary hidden" type="button" data-cancelar="alumno">Cancelar edición</button>
           </form>
 
           <section class="content-card table-card">
@@ -151,28 +135,38 @@
         </section>
       </section>
 
-      <!-- Profesores -->
+      <!-- ================= PROFESORES ================= -->
       <section id="section-profesores" class="page-section">
         <div class="section-header">
           <div>
             <h2>Profesores</h2>
-            <p>Administración de docentes y especialidades.</p>
+            <p>Gestiona el equipo docente y sus especialidades.</p>
           </div>
-          <button class="btn btn-primary" data-reload="profesores">Actualizar</button>
+          <button class="btn btn-primary" data-reload="profesor">Actualizar</button>
         </div>
+
+        <!-- Buscador: GET /profesor/:email -->
+        <form id="profesorBuscarForm" class="content-card search-bar" data-recurso="profesor">
+          <input name="clave" type="email" placeholder="Buscar profesor por email" required />
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <button class="btn btn-secondary" type="button" data-clear="profesor">Limpiar</button>
+        </form>
+        <div id="profesorBuscarResultado" class="search-result"></div>
 
         <section class="content-grid">
           <form id="profesorForm" class="content-card form-grid">
-            <h3>Nuevo profesor</h3>
+            <h3 id="profesorFormTitulo">Nuevo profesor</h3>
+            <div id="profesorEditBanner" class="edit-banner hidden"></div>
 
             <label>Nombre<input name="nombre" required /></label>
             <label>Apellidos<input name="apellidos" required /></label>
             <label>Email<input type="email" name="email" required /></label>
-            <label>Password<input type="password" name="password" value="Profesor123" required /></label>
+            <label>Password<input type="password" name="password" placeholder="Solo al crear" /></label>
             <label>Especialidad<input name="especialidad" placeholder="Backend" /></label>
-            <label>Campus<input name="campus" placeholder="Madrid Norte" /></label>
+            <label>Campus<input name="campus" placeholder="Madrid" /></label>
 
-            <button class="btn btn-primary" type="submit">Crear profesor</button>
+            <button class="btn btn-primary" type="submit" id="profesorSubmit">Crear profesor</button>
+            <button class="btn btn-secondary hidden" type="button" data-cancelar="profesor">Cancelar edición</button>
           </form>
 
           <section class="content-card table-card">
@@ -185,31 +179,37 @@
         </section>
       </section>
 
-      <!-- Promociones / Cursos -->
+      <!-- ================= PROMOCIONES / CURSOS ================= -->
       <section id="section-promociones" class="page-section">
         <div class="section-header">
           <div>
             <h2>Promociones / Cursos</h2>
-            <p>
-              En el backend actual esta entidad puede estar implementada como Curso.
-              Visualmente la presentamos como promoción académica.
-            </p>
+            <p>Cohortes del bootcamp con sus fechas y campus.</p>
           </div>
-          <button class="btn btn-primary" data-reload="promociones">Actualizar</button>
+          <button class="btn btn-primary" data-reload="curso">Actualizar</button>
         </div>
+
+        <!-- Buscador: GET /curso/:id -->
+        <form id="cursoBuscarForm" class="content-card search-bar" data-recurso="curso">
+          <input name="clave" placeholder="Buscar curso por ID (ObjectId)" required />
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <button class="btn btn-secondary" type="button" data-clear="curso">Limpiar</button>
+        </form>
+        <div id="cursoBuscarResultado" class="search-result"></div>
 
         <section class="content-grid">
           <form id="promocionForm" class="content-card form-grid">
-            <h3>Nueva promoción</h3>
+            <h3 id="cursoFormTitulo">Nueva promoción</h3>
+            <div id="cursoEditBanner" class="edit-banner hidden"></div>
 
-            <label>Nombre<input name="nombre" required placeholder="FS-2026-01" /></label>
-            <label>Descripción<input name="descripcion" placeholder="Bootcamp Full Stack" /></label>
-            <label>Campus<input name="campus" placeholder="Sevilla Centro" /></label>
+            <label>Nombre<input name="nombre" required placeholder="Full Stack Web Sevilla 2026" /></label>
+            <label>Campus<input name="campus" placeholder="Sevilla" /></label>
             <label>Fecha inicio<input type="date" name="fechaInicio" /></label>
             <label>Fecha fin<input type="date" name="fechaFin" /></label>
             <label>Profesor ID opcional<input name="profesor" placeholder="ObjectId de profesor" /></label>
 
-            <button class="btn btn-primary" type="submit">Crear promoción</button>
+            <button class="btn btn-primary" type="submit" id="cursoSubmit">Crear promoción</button>
+            <button class="btn btn-secondary hidden" type="button" data-cancelar="curso">Cancelar edición</button>
           </form>
 
           <section class="content-card table-card">
@@ -222,26 +222,36 @@
         </section>
       </section>
 
-      <!-- Proyectos -->
+      <!-- ================= PROYECTOS ================= -->
       <section id="section-proyectos" class="page-section">
         <div class="section-header">
           <div>
             <h2>Proyectos</h2>
-            <p>Gestión de proyectos evaluables.</p>
+            <p>Entregables evaluables de cada promoción.</p>
           </div>
-          <button class="btn btn-primary" data-reload="proyectos">Actualizar</button>
+          <button class="btn btn-primary" data-reload="proyecto">Actualizar</button>
         </div>
+
+        <!-- Buscador: GET /proyecto/:id -->
+        <form id="proyectoBuscarForm" class="content-card search-bar" data-recurso="proyecto">
+          <input name="clave" placeholder="Buscar proyecto por ID (ObjectId)" required />
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <button class="btn btn-secondary" type="button" data-clear="proyecto">Limpiar</button>
+        </form>
+        <div id="proyectoBuscarResultado" class="search-result"></div>
 
         <section class="content-grid">
           <form id="proyectoForm" class="content-card form-grid">
-            <h3>Nuevo proyecto</h3>
+            <h3 id="proyectoFormTitulo">Nuevo proyecto</h3>
+            <div id="proyectoEditBanner" class="edit-banner hidden"></div>
 
             <label>Nombre<input name="nombre" required placeholder="Proyecto Final API REST" /></label>
             <label>Descripción<input name="descripcion" placeholder="API REST con MongoDB" /></label>
             <label>Fecha entrega<input type="date" name="fechaEntrega" /></label>
             <label>Curso ID opcional<input name="curso" placeholder="ObjectId de curso/promoción" /></label>
 
-            <button class="btn btn-primary" type="submit">Crear proyecto</button>
+            <button class="btn btn-primary" type="submit" id="proyectoSubmit">Crear proyecto</button>
+            <button class="btn btn-secondary hidden" type="button" data-cancelar="proyecto">Cancelar edición</button>
           </form>
 
           <section class="content-card table-card">
@@ -254,21 +264,30 @@
         </section>
       </section>
 
-      <!-- Notas -->
+      <!-- ================= NOTAS ================= -->
       <section id="section-notas" class="page-section">
         <div class="section-header">
           <div>
             <h2>Notas</h2>
-            <p>Relación entre alumnos, proyectos y calificaciones.</p>
+            <p>Calificaciones que conectan alumnos, proyectos y profesores.</p>
           </div>
-          <button class="btn btn-primary" data-reload="notas">Actualizar</button>
+          <button class="btn btn-primary" data-reload="nota">Actualizar</button>
         </div>
+
+        <!-- Buscador: GET /nota/:id -->
+        <form id="notaBuscarForm" class="content-card search-bar" data-recurso="nota">
+          <input name="clave" placeholder="Buscar nota por ID (ObjectId)" required />
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <button class="btn btn-secondary" type="button" data-clear="nota">Limpiar</button>
+        </form>
+        <div id="notaBuscarResultado" class="search-result"></div>
 
         <section class="content-grid">
           <form id="notaForm" class="content-card form-grid">
-            <h3>Nueva nota</h3>
+            <h3 id="notaFormTitulo">Nueva nota</h3>
+            <div id="notaEditBanner" class="edit-banner hidden"></div>
 
-            <label>Alumno ID<input name="alumno" required placeholder="ObjectId del alumno" /></label>
+            <label>Alumno ID<input name="alumno" required placeholder="ObjectId del alumno (cópialo de su tabla)" /></label>
             <label>Proyecto ID<input name="proyecto" required placeholder="ObjectId del proyecto" /></label>
             <label>Profesor ID opcional<input name="profesor" placeholder="ObjectId del profesor" /></label>
             <label>Calificación<input type="number" step="0.1" min="0" max="10" name="calificacion" required /></label>
@@ -281,7 +300,8 @@
             </label>
             <label>Observaciones<textarea name="observaciones" rows="3"></textarea></label>
 
-            <button class="btn btn-primary" type="submit">Crear nota</button>
+            <button class="btn btn-primary" type="submit" id="notaSubmit">Crear nota</button>
+            <button class="btn btn-secondary hidden" type="button" data-cancelar="nota">Cancelar edición</button>
           </form>
 
           <section class="content-card table-card">
@@ -294,12 +314,64 @@
         </section>
       </section>
 
-      <!-- Analytics -->
+      <!-- ================= ADMINS ================= -->
+      <section id="section-admins" class="page-section">
+        <div class="section-header">
+          <div>
+            <h2>Admins</h2>
+            <p>Administradores del sistema y alta de nuevos usuarios.</p>
+          </div>
+        </div>
+
+        <!-- Buscador: GET /admin/:email (no existe listado de admins en la API) -->
+        <form id="adminBuscarForm" class="content-card search-bar" data-recurso="admin">
+          <input name="clave" type="email" placeholder="Buscar admin por email" required />
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <button class="btn btn-secondary" type="button" data-clear="admin">Limpiar</button>
+        </form>
+        <div id="adminBuscarResultado" class="search-result"></div>
+
+        <section class="content-grid">
+          <form id="adminForm" class="content-card form-grid">
+            <h3 id="adminFormTitulo">Nuevo admin</h3>
+            <div id="adminEditBanner" class="edit-banner hidden"></div>
+
+            <label>Nombre<input name="nombre" required /></label>
+            <label>Apellidos<input name="apellidos" /></label>
+            <label>Email<input type="email" name="email" required /></label>
+            <label>Password<input type="password" name="password" placeholder="Solo al crear" /></label>
+
+            <button class="btn btn-primary" type="submit" id="adminSubmit">Crear admin</button>
+            <button class="btn btn-secondary hidden" type="button" data-cancelar="admin">Cancelar edición</button>
+          </form>
+
+          <!-- Registro por /auth/register (endpoint público de la API) -->
+          <form id="registerForm" class="content-card form-grid">
+            <h3>Registrar usuario</h3>
+
+            <label>Nombre<input name="nombre" required /></label>
+            <label>Apellidos<input name="apellidos" /></label>
+            <label>Email<input type="email" name="email" required /></label>
+            <label>Password<input type="password" name="password" required /></label>
+            <label>
+              Rol
+              <select name="rol" required>
+                <option value="admin">admin</option>
+                <option value="profesor">profesor</option>
+              </select>
+            </label>
+
+            <button class="btn btn-primary" type="submit">Registrar usuario</button>
+          </form>
+        </section>
+      </section>
+
+      <!-- ================= ANALYTICS ================= -->
       <section id="section-analytics" class="page-section">
         <div class="section-header">
           <div>
             <h2>Analytics académico</h2>
-            <p>Endpoints analíticos para la presentación técnica del proyecto.</p>
+            <p>Indicadores académicos calculados en tiempo real con agregaciones.</p>
           </div>
           <button id="reloadAnalyticsBtn" class="btn btn-primary">Actualizar analytics</button>
         </div>

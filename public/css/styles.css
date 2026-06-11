@@ -23,7 +23,7 @@
   --border:        #2d2d2d;
 
   /* Peligro / error */
-  --danger:        #f04438;
+  --danger:        #F59E0B;
   --danger-bg:     #2d1010;
 
   /* Geometría */
@@ -56,11 +56,13 @@ table {
   border-collapse: collapse;        /* une los bordes de las celdas (sin huecos dobles) */
   background: var(--card);          /* mismo fondo que las tarjetas */
   border-radius: var(--radius-sm);  /* esquinas redondeadas */
-  overflow: hidden;                 /* recorta las celdas para respetar las esquinas */
   font-size: 0.95rem;
 }
 
 /* Cabecera */
+thead th:first-child { border-top-left-radius: var(--radius-sm); }
+thead th:last-child { border-top-right-radius: var(--radius-sm); }
+
 thead th {
   background: var(--surface);       /* un poco más claro que el cuerpo */
   color: var(--green);              /* títulos en el verde de la marca */
@@ -661,4 +663,110 @@ label {
   .analytics-grid {
     grid-template-columns: 1fr;
   }
+}
+/* =========================================================
+   PANEL 100%: buscadores, modo edición y botones de acciones
+   ========================================================= */
+
+/* Barra de búsqueda (GET por email/ID) */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.search-bar input {
+  flex: 1;                          /* el input ocupa todo el espacio libre */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 10px 12px;
+}
+
+/* Resultado de la búsqueda (tabla de una fila) */
+.search-result {
+  margin-bottom: 14px;
+}
+
+/* Banner que indica que el formulario está en modo edición (PUT) */
+.edit-banner {
+  background: var(--green-subtle);
+  border: 1px solid var(--green);
+  color: var(--green);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  word-break: break-all;            /* los ObjectIds largos no rompen el diseño */
+}
+
+/* ---------- Menú desplegable de acciones (botón ⋯) ---------- */
+td.acciones {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.menu-acciones {
+  position: relative;               /* ancla del menú flotante */
+  display: inline-block;
+}
+
+.btn-menu {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-menu:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.menu-opciones {
+  position: absolute;               /* flota sobre la tabla */
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  min-width: 140px;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.menu-opciones button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.menu-opciones button:hover {
+  background: var(--green-subtle);
+  color: var(--green);
+}
+
+/* La opción Eliminar se distingue solo con un tono suave, sin rojo agresivo */
+.menu-opciones .opcion-eliminar {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.menu-opciones .opcion-eliminar:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
 }

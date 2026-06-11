@@ -28,20 +28,22 @@ const validationAdmin = [
     .withMessage("La contraseña debe tener al menos 6 caracteres"),
 ];
 
-router.use(authRequired);
+router.use(authRequired)
+router.use(requireRole("admin"));
 
 /**
  * @swagger
- * /admin:
+ * /admin/{email}:
  *   get:
  *     summary: Busca admin por email
  *     tags: [Admin]
  *     parameters:
- *       - in: query
+ *       - in: path
  *         name: email
+ *         required: true
  *         schema:
  *           type: string
- *         example: admin@aprentic.es
+ *         example: admin@aprentic.com
  *     responses:
  *       200:
  *         description: Admin encontrado
@@ -67,8 +69,8 @@ router.use(authRequired);
  *             properties:
  *               nombre: {type: string, example: "Carlos"}
  *               apellidos: {type: string, example: "Martínez López"}
- *               email: {type: string, example: "admin@aprentic.es"}
- *               password: {type: string, example: "admin1234"}
+ *               email: {type: string, example: "admin@aprentic.com"}
+ *               password: {type: string, example: "123456"}
  *     responses:
  *       201:
  *         description: Admin creado

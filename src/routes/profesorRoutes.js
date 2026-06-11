@@ -151,10 +151,10 @@ router.use(authRequired);
  *         description: Profesor no encontrado
  */
 
-router.get("/", ctrl.getProfesor);
-router.get("/:email", ctrl.getProfesorByEmail);
-router.post("/", validationProfesor, validate, ctrl.createProfesor);
-router.put("/:id", validationProfesor, validate, ctrl.updateProfesor);
-router.delete("/:id", ctrl.deleteProfesor);
+router.get("/", requireRole("admin", "profesor"), ctrl.getProfesor);
+router.get("/:email", requireRole("admin", "profesor"), ctrl.getProfesorByEmail);
+router.post("/", requireRole("admin"), validationProfesor, validate, ctrl.createProfesor);
+router.put("/:id", requireRole("admin"), validationProfesor, validate, ctrl.updateProfesor);
+router.delete("/:id", requireRole("admin"), ctrl.deleteProfesor);
 
 module.exports = router;

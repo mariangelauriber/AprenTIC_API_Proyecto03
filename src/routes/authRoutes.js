@@ -41,14 +41,14 @@ const reglasLogin = [
  *             type: object
  *             required: [email, password, nombre]
  *             properties:
- *               email: {type: string, example: "admin@aprentic.es"}
- *               password: {type: string, example: "admin1234"}
+ *               email: {type: string, example: "admin@aprentic.com"}
+ *               password: {type: string, example: "123456"}
  *               nombre: {type: string, example: "John"}
  *               apellidos: {type: string, example: "Doe"}
  *               rol: {type: string, example: "admin"}
  *           example:
- *             email: admin@aprentic.es
- *             password: admin1234
+ *             email: admin@aprentic.com
+ *             password: 123456
  *             nombre: John
  *             apellidos: Doe
  *             rol: admin

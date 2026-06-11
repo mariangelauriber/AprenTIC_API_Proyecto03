@@ -11,6 +11,7 @@ const alumnoRoutes = require("./routes/alumnoRoutes");
 const cursoRoutes = require("./routes/cursoRoutes");
 const proyectoRoutes = require("./routes/proyectoRoutes");
 const notaRoutes = require("./routes/notaRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes"); 
 
 const path = require("path");
 
@@ -35,6 +36,8 @@ app.use("/alumno", alumnoRoutes);
 app.use("/curso", cursoRoutes);
 app.use("/proyecto", proyectoRoutes);
 app.use("/nota", notaRoutes);
+app.use("/analytics", analyticsRoutes);
+
 
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
