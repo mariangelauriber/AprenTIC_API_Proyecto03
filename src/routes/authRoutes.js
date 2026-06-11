@@ -80,11 +80,11 @@ router.post("/register", reglasRegistro, validate, ctrl.register);
  *             type: object
  *             required: [email, password]
  *             properties:
- *               email: {type: string, example: "admin@aprentic.es"}
- *               password: {type: string, example: "admin1234"}
+ *               email: {type: string, example: "admin@aprentic.com"}
+ *               password: {type: string, example: "123456"}
  *           example:
- *             email: admin@aprentic.es
- *             password: admin1234
+ *             email: admin@aprentic.com
+ *             password: 123456
  *     responses:
  *       200:
  *         description: Login correcto

@@ -47,6 +47,57 @@ button, input, select, textarea { font: inherit; }
    UTILITIES
    ========================================================= */
 
+/* =========================================================
+   TABLAS (estilo global para todas las tablas del proyecto)
+   ========================================================= */
+
+table {
+  width: 100%;                      /* ocupa todo el ancho de su contenedor */
+  border-collapse: collapse;        /* une los bordes de las celdas (sin huecos dobles) */
+  background: var(--card);          /* mismo fondo que las tarjetas */
+  border-radius: var(--radius-sm);  /* esquinas redondeadas */
+  overflow: hidden;                 /* recorta las celdas para respetar las esquinas */
+  font-size: 0.95rem;
+}
+
+/* Cabecera */
+thead th {
+  background: var(--surface);       /* un poco más claro que el cuerpo */
+  color: var(--green);              /* títulos en el verde de la marca */
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: bold;
+  text-transform: uppercase;        /* NOMBRE, EMAIL... en mayúsculas */
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;           /* un pelín de aire entre letras */
+  border-bottom: 2px solid var(--green);
+}
+
+/* Celdas del cuerpo */
+tbody td {
+  padding: 12px 16px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border); /* línea fina entre filas */
+}
+
+/* Filas alternas (efecto cebra para leer mejor) */
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Resaltar la fila al pasar el ratón */
+tbody tr:hover {
+  background: var(--green-subtle);
+}
+
+/* La última fila no necesita línea inferior */
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+
+
 .hidden { display: none; }
 
 .muted {
