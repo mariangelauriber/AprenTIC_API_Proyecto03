@@ -4,23 +4,19 @@
 const Nota = require("../models/Nota");
 
 // 1) Tasa de aptos por campus
-// Recorre las notas, busca el alumno de cada nota para saber su campus,
-// agrupa por campus y calcula el porcentaje de notas "apto".
 const aptosPorCampus = async () => {
   return Nota.aggregate([
-    // $lookup = "join": trae el documento del alumno de cada nota
-    { $lookup: { from: "alumno", localField: "alumno", foreignField: "_id", as: "alumno" } },
-    // $unwind: convierte el array alumno:[{...}] en un objeto alumno:{...}
-    { $unwind: "$alumno" },
-    // $group: una fila por campus, contando total de notas y cuantas son "apto"
+    { $match: { alumno: { $ne: null } } },
+    { $addFields: { alumnoOid: { $toObjectId: "$alumno" } } },
+    { $lookup: { from: "alumno", localField: "alumnoOid", foreignField: "_id", as: "alumnoDato" } },
+    { $unwind: "$alumnoDato" },
     {
       $group: {
-        _id: "$alumno.campus",
+        _id: "$alumnoDato.campus",
         totalNotas: { $sum: 1 },
         aptos: { $sum: { $cond: [{ $eq: ["$estado", "apto"] }, 1, 0] } },
       },
     },
-    // $project: damos forma a la salida y calculamos el porcentaje
     {
       $project: {
         _id: 0,
@@ -38,25 +34,24 @@ const aptosPorCampus = async () => {
 // Riesgo = media de calificacion menor que 5 O tener algun "no apto".
 const alumnosEnRiesgo = async () => {
   return Nota.aggregate([
-    // Agrupamos las notas por alumno: media y cuantos "no apto" tiene
+    { $match: { alumno: { $ne: null } } },
+    { $addFields: { alumnoOid: { $toObjectId: "$alumno" } } },
     {
       $group: {
-        _id: "$alumno",
+        _id: "$alumnoOid",
         media: { $avg: "$calificacion" },
         noAptos: { $sum: { $cond: [{ $eq: ["$estado", "no apto"] }, 1, 0] } },
       },
     },
-    // Filtramos solo los que cumplen la condicion de riesgo
     { $match: { $or: [{ media: { $lt: 5 } }, { noAptos: { $gte: 1 } }] } },
-    // Traemos los datos del alumno para mostrar nombre y campus
-    { $lookup: { from: "alumno", localField: "_id", foreignField: "_id", as: "alumno" } },
-    { $unwind: "$alumno" },
+    { $lookup: { from: "alumno", localField: "_id", foreignField: "_id", as: "alumnoDato" } },
+    { $unwind: "$alumnoDato" },
     {
       $project: {
         _id: 0,
-        nombre: "$alumno.nombre",
-        apellidos: "$alumno.apellidos",
-        campus: "$alumno.campus",
+        nombre: "$alumnoDato.nombre",
+        apellidos: "$alumnoDato.apellidos",
+        campus: "$alumnoDato.campus",
         media: { $round: ["$media", 1] },
         noAptos: 1,
       },
@@ -68,14 +63,12 @@ const alumnosEnRiesgo = async () => {
 // 3) Ranking de proyectos con mas "no apto"
 const rankingNoAptos = async () => {
   return Nota.aggregate([
-    // Solo las notas suspensas
-    { $match: { estado: "no apto" } },
-    // Una fila por proyecto, contando cuantos "no apto" acumula
-    { $group: { _id: "$proyecto", noAptos: { $sum: 1 } } },
-    // Traemos el nombre del proyecto
-    { $lookup: { from: "proyecto", localField: "_id", foreignField: "_id", as: "proyecto" } },
-    { $unwind: "$proyecto" },
-    { $project: { _id: 0, proyecto: "$proyecto.nombre", noAptos: 1 } },
+    { $match: { estado: "no apto", proyecto: { $ne: null } } },
+    { $addFields: { proyectoOid: { $toObjectId: "$proyecto" } } },
+    { $group: { _id: "$proyectoOid", noAptos: { $sum: 1 } } },
+    { $lookup: { from: "proyecto", localField: "_id", foreignField: "_id", as: "proyectoDato" } },
+    { $unwind: "$proyectoDato" },
+    { $project: { _id: 0, proyecto: "$proyectoDato.nombre", noAptos: 1 } },
     { $sort: { noAptos: -1 } },
   ]);
 };

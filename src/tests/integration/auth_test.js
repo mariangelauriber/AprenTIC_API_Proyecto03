@@ -44,7 +44,7 @@ describe('POST /auth/login', () => {
     it('devuelve un token con credenciales correctas', async () => {
         await request(app)
           .post('/auth/register')
-          .send({ email: 'a@a.com', password: 'secreta', name: 'Ana', role: 'admin' });
+          .send({ email: 'a@a.com', password: 'secreta', nombre: 'Ana', rol: 'admin' });
         const res = await request(app)
           .post('/auth/login')
           .send({ email: 'a@a.com', password: 'secreta' });

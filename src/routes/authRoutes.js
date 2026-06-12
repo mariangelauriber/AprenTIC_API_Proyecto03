@@ -14,7 +14,7 @@ const reglasRegistro = [
   body("apellidos").optional().trim(),
   body("rol")
     .optional()
-    .isIn(["admin", "profesor", "user"])
+    .isIn(["admin", "profesor", "alumno"])
     .withMessage("Rol no válido"),
 ];
 
