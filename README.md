@@ -1,61 +1,63 @@
 # AprenTIC Campus API
 
-API REST para la gestión académica de un bootcamp multi-campus, construida con **Node.js**, **Express** y **MongoDB Atlas**.
+API REST con Node.js, Express, MongoDB Atlas y Mongoose para gestionar información académica: usuarios, profesores, alumnos, cursos, proyectos y notas. El proyecto incluye también una interfaz web sencilla en `public/` para iniciar sesión y consultar los datos desde un dashboard.
 
+## Tecnologías
 
-## Modelo lógico para MongoDB
+- Node.js
+- Express
+- MongoDB Atlas
+- Mongoose
+- JWT para autenticación
+- bcrypt para hash de contraseñas
+- express-validator para validación
+- Swagger UI en `/api-docs`
+- HTML, CSS y JavaScript vanilla para el frontend
 
-Este proyecto implementa una base de datos **no relacional** con **MongoDB Atlas**. El modelo lógico no se traduce a tablas SQL, sino a colecciones de documentos. Las relaciones entre entidades se representan mediante **referencias con `ObjectId`**.
+## Modelo lógico
 
+El proyecto usa una base de datos no relacional en MongoDB Atlas. Las relaciones entre entidades se representan mediante referencias con `ObjectId`.
 
-### Lógica del modelo
+Un profesor imparte uno o varios cursos.
 
-Un PROFESOR imparte un CURSO
-Un CURSO tiene muchos ALUMNOS
-Un CURSO tiene muchos PROYECTOS
-Una NOTA conecta un ALUMNO + un PROYECTO + el PROFESOR que lo corrige
+Un curso tiene muchos alumnos.
 
+Un curso tiene muchos proyectos.
 
-### Colecciones principales
+Una nota conecta un alumno, un proyecto y el profesor que corrige.
 
-| `Admin` | Acceso total al sistema. Gestiona usuarios y cursos |
-| `Profesor` | Imparte cursos y corrige notas de sus alumnos |
-| `Alumno` | Pertenece a un curso y puede consultar sus notas |
-| `Curso` | Agrupación de alumnos (ej: "Full Stack Web Sevilla 2026") |
-| `Proyecto` | Entregable evaluable dentro de un curso |
-| `Nota` | Relación entre alumno, proyecto y profesor |
+Además, la autenticación se gestiona mediante una colección `user`, usada por `/auth/register` y `/auth/login`. Esta colección guarda las credenciales y el rol del usuario que inicia sesión.
 
-### Relaciones
+## Colecciones principales
 
-Admin
-└── gestiona todo el sistema
+| Colección | Descripción |
+| --- | --- |
+| `user` | Usuarios que pueden iniciar sesión. Contiene `email`, `password` y `role`. |
+| `admin` | Datos de administradores del sistema. |
+| `profesor` | Profesores que imparten cursos y corrigen notas. |
+| `alumno` | Alumnos asociados a cursos. |
+| `curso` | Cursos académicos asociados opcionalmente a un profesor. |
+| `proyecto` | Proyectos o entregables asociados a cursos. |
+| `nota` | Calificaciones relacionadas con alumno, proyecto y profesor. |
 
-Profesor
-└── imparte muchos Cursos
-└── corrige muchas Notas
+## Esquema de colecciones
 
-Curso
-└── tiene muchos Alumnos
-└── tiene muchos Proyectos
-└── pertenece a un Profesor
-
-Alumno
-└── pertenece a un Curso
-└── tiene muchas Notas
-
-Proyecto
-└── pertenece a un Curso
-└── tiene muchas Notas
-
-Nota
-└── conecta Alumno + Proyecto + Profesor
-
-
-### Esquema de colecciones
+```txt
+USER
+├── _id
+├── nombre
+├── apellidos
+├── email
+├── password
+├── role: "admin" | "profesor" | "user"
+├── especialidad
+├── campus
+└── cursos
 
 ADMIN
 ├── _id
 ├── nombre
+├── apellidos
 ├── email
 ├── password
 └── rol: "admin"
@@ -66,9 +68,9 @@ PROFESOR
 ├── apellidos
 ├── email
 ├── password
-├── especialidad
 ├── rol: "profesor"
-└── cursos: [cursoId]
+├── especialidad
+└── campus
 
 ALUMNO
 ├── _id
@@ -76,139 +78,222 @@ ALUMNO
 ├── apellidos
 ├── email
 ├── password
+├── rol: "alumno"
 ├── edad
 ├── campus
-├── rol: "alumno"
-└── cursoId
+└── curso
 
 CURSO
 ├── _id
 ├── nombre
+├── descripcion
 ├── campus
 ├── fechaInicio
 ├── fechaFin
-└── profesorId
+└── profesor
 
 PROYECTO
 ├── _id
 ├── nombre
 ├── descripcion
 ├── fechaEntrega
-└── cursoId
+└── curso
 
 NOTA
 ├── _id
-├── alumnoId
-├── proyectoId
-├── profesorId
+├── alumno
+├── proyecto
+├── profesor
 ├── calificacion
-├── estado
+├── estado: "apto" | "no apto"
 └── observaciones
+```
 
+## Roles y permisos
 
-## Arquitectura MVC
+El login devuelve un token JWT con el rol del usuario.
 
-El proyecto sigue el patrón **Model–View–Controller** con las responsabilidades bien separadas en cada capa:
+- `admin`: puede acceder a las rutas protegidas de administración y ver toda la información en el dashboard.
+- `profesor`: puede iniciar sesión y el dashboard filtra visualmente cursos, alumnos, proyectos y notas relacionados con su perfil.
+- `user`: rol por defecto de la colección `user`.
 
-| `routes/` | Mapean las URLs a los controladores correspondientes |
-| `controllers/` | Reciben la petición HTTP y devuelven la respuesta |
-| `services/` | Contienen la lógica de negocio y las consultas a la base de datos |
-| `models/` | Definen los esquemas de Mongoose para cada colección |
+Nota: el filtrado del profesor se realiza actualmente en el frontend, dentro de `public/js/dashboard.js`, a partir de las relaciones entre colecciones. Las rutas específicas del backend para alumnos, cursos, proyectos y notas no aplican todavía ese filtrado por profesor.
 
+## Configuración
 
-### Estructura de carpetas
+Crea un archivo `.env` en la raíz del proyecto:
 
-src/
-├── app.js
-├── routes/
-│   ├── adminRoutes.js
-│   ├── profesorRoutes.js
-│   ├── alumnoRoutes.js
-│   ├── cursoRoutes.js
-│   ├── proyectoRoutes.js
-│   └── notaRoutes.js
-├── controllers/
-│   ├── adminController.js
-│   ├── profesorController.js
-│   ├── alumnoController.js
-│   ├── cursoController.js
-│   ├── proyectoController.js
-│   └── notaController.js
-├── services/
-│   ├── adminService.js
-│   ├── profesorService.js
-│   ├── alumnoService.js
-│   ├── cursoService.js
-│   ├── proyectoService.js
-│   └── notaService.js
-└── models/
-    ├── Admin.js
-    ├── Profesor.js
-    ├── Alumno.js
-    ├── Curso.js
-    ├── Proyecto.js
-    └── Nota.js
+```env
+PORT=3000
+MONGO_URI=mongodb+srv://usuario:password@cluster.mongodb.net/nombre_bbdd?appName=...
+JWT_SECRET=change_this_secret
+```
 
+También existe `.env.example` como plantilla.
 
-## Datos de prueba (CSV)
+Si MongoDB Atlas no conecta, revisa en Atlas:
 
-El archivo `data/aprentic_datos.csv` contiene los datos originales sin normalizar
-a partir de los cuales se ha diseñado el modelo de base de datos.
+- `Network Access`: añade tu IP actual.
+- Usuario y contraseña de la URI.
+- Nombre de la base de datos.
+- Que el puerto `27017` no esté bloqueado por tu red.
 
-Incluye: 1 admin, 2 profesores, 6 alumnos, 2 cursos, 2 proyectos y 6 notas.
+## Instalación
 
+```bash
+npm install
+```
 
-## CRUD implementado
+En Windows PowerShell puede aparecer un error de política de ejecución con `npm`. En ese caso usa `npm.cmd`:
+
+```powershell
+npm.cmd install
+```
+
+## Arranque
+
+Modo normal:
+
+```bash
+npm start
+```
+
+En Windows PowerShell:
+
+```powershell
+npm.cmd start
+```
+
+Modo desarrollo con nodemon:
+
+```bash
+npm run dev
+```
+
+En Windows PowerShell:
+
+```powershell
+npm.cmd run dev
+```
+
+El servidor escucha por defecto en:
+
+```txt
+http://localhost:3000
+```
+
+## Documentación Swagger
+
+Con el servidor levantado, la documentación Swagger está disponible en:
+
+```txt
+http://localhost:3000/api-docs
+```
+
+## Frontend
+
+La interfaz está en la carpeta `public/`:
+
+- `public/login.html`
+- `public/dashboard.html`
+- `public/css/styles.css`
+- `public/js/api.js`
+- `public/js/auth.js`
+- `public/js/dashboard.js`
+
+El frontend llama a la API configurada en:
+
+```js
+const API_BASE_URL = "http://localhost:3000";
+```
+
+Después de iniciar sesión, el token se guarda en `localStorage` como `aprentic_token`, y los datos del usuario como `aprentic_user`.
+
+## Endpoints
+
+### Auth
+
+| Método | Endpoint | Descripción | Protección |
+| --- | --- | --- | --- |
+| `POST` | `/auth/register` | Registrar usuario en la colección `user` | Pública |
+| `POST` | `/auth/login` | Iniciar sesión y obtener token JWT | Pública |
 
 ### Admins
 
-| `GET`    | `/admins`         | Obtener todos los admins |
-| `GET`    | `/admins/:id`     | Obtener un admin por ID |
-| `POST`   | `/admins`         | Crear un nuevo admin |
-| `PUT`    | `/admins/:id`     | Actualizar un admin |
-| `DELETE` | `/admins/:id`     | Eliminar un admin |
+Estas rutas requieren token JWT y rol `admin`.
+
+| Método | Endpoint | Descripción |
+| --- | --- | --- |
+| `GET` | `/admin` | Obtener todos los admins |
+| `GET` | `/admin/:email` | Obtener un admin por email |
+| `POST` | `/admin` | Crear un nuevo admin |
+| `PUT` | `/admin/:id` | Actualizar un admin |
+| `DELETE` | `/admin/:id` | Eliminar un admin |
 
 ### Profesores
 
-| `GET`    | `/profesores`     | Obtener todos los profesores |
-| `GET`    | `/profesores/:id` | Obtener un profesor por ID |
-| `POST`   | `/profesores`     | Crear un nuevo profesor |
-| `PUT`    | `/profesores/:id` | Actualizar un profesor |
-| `DELETE` | `/profesores/:id` | Eliminar un profesor |
+Estas rutas requieren token JWT.
+
+| Método | Endpoint | Descripción |
+| --- | --- | --- |
+| `GET` | `/profesor` | Obtener todos los profesores |
+| `GET` | `/profesor/:email` | Obtener un profesor por email |
+| `POST` | `/profesor` | Crear un nuevo profesor |
+| `PUT` | `/profesor/:id` | Actualizar un profesor |
+| `DELETE` | `/profesor/:id` | Eliminar un profesor |
 
 ### Alumnos
 
-| `GET`    | `/alumnos`        | Obtener todos los alumnos |
-| `GET`    | `/alumnos/:id`    | Obtener un alumno por ID |
-| `POST`   | `/alumnos`        | Crear un nuevo alumno |
-| `PUT`    | `/alumnos/:id`    | Actualizar un alumno |
-| `DELETE` | `/alumnos/:id`    | Eliminar un alumno |
+| Método | Endpoint | Descripción |
+| --- | --- | --- |
+| `GET` | `/alumno` | Obtener todos los alumnos |
+| `GET` | `/alumno/:email` | Obtener un alumno por email |
+| `POST` | `/alumno` | Crear un nuevo alumno |
+| `PUT` | `/alumno/:id` | Actualizar un alumno |
+| `DELETE` | `/alumno/:id` | Eliminar un alumno |
 
 ### Cursos
 
-| `GET`    | `/cursos`         | Obtener todos los cursos |
-| `GET`    | `/cursos/:id`     | Obtener un curso por ID |
-| `POST`   | `/cursos`         | Crear un nuevo curso |
-| `PUT`    | `/cursos/:id`     | Actualizar un curso |
-| `DELETE` | `/cursos/:id`     | Eliminar un curso |
+| Método | Endpoint | Descripción |
+| --- | --- | --- |
+| `GET` | `/curso` | Obtener todos los cursos |
+| `GET` | `/curso/:id` | Obtener un curso por ID |
+| `POST` | `/curso` | Crear un nuevo curso |
+| `PUT` | `/curso/:id` | Actualizar un curso |
+| `DELETE` | `/curso/:id` | Eliminar un curso |
 
 ### Proyectos
 
-| `GET`    | `/proyectos`      | Obtener todos los proyectos |
-| `GET`    | `/proyectos/:id`  | Obtener un proyecto por ID |
-| `POST`   | `/proyectos`      | Crear un nuevo proyecto |
-| `PUT`    | `/proyectos/:id`  | Actualizar un proyecto |
-| `DELETE` | `/proyectos/:id`  | Eliminar un proyecto |
- 
+| Método | Endpoint | Descripción |
+| --- | --- | --- |
+| `GET` | `/proyecto` | Obtener todos los proyectos |
+| `GET` | `/proyecto/:id` | Obtener un proyecto por ID |
+| `POST` | `/proyecto` | Crear un nuevo proyecto |
+| `PUT` | `/proyecto/:id` | Actualizar un proyecto |
+| `DELETE` | `/proyecto/:id` | Eliminar un proyecto |
+
 ### Notas
 
-| `GET`    | `/notas`          | Obtener todas las notas |
-| `GET`    | `/notas/:id`      | Obtener una nota por ID |
-| `POST`   | `/notas`          | Crear una nueva nota |
-| `PUT`    | `/notas/:id`      | Actualizar una nota |
-| `DELETE` | `/notas/:id`      | Eliminar una nota |
+| Método | Endpoint | Descripción |
+| --- | --- | --- |
+| `GET` | `/nota` | Obtener todas las notas |
+| `GET` | `/nota/:id` | Obtener una nota por ID |
+| `POST` | `/nota` | Crear una nueva nota |
+| `PUT` | `/nota/:id` | Actualizar una nota |
+| `DELETE` | `/nota/:id` | Eliminar una nota |
 
+## Tests
 
+El proyecto define tests con Jest:
 
+```bash
+npm test
+```
 
-*Proyecto realizado para el módulo AprenTIC Full Stack Web — Sevilla*
+En Windows PowerShell:
+
+```powershell
+npm.cmd test
+```
+
+Si `jest` no se reconoce como comando, vuelve a instalar dependencias con `npm.cmd install`.

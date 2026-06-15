@@ -25,27 +25,31 @@ const validationProfesor = [
     .normalizeEmail(),
   body("especialidad").isString().withMessage("Especialidad incorrecta").trim(),
   body("campus").isString().withMessage("Campus incorrecto").trim(),
+  body("password")
+    .optional()
+    .isString()
+    .withMessage("Contraseña incorrecta")
+    .isLength({ min: 6 })
+    .withMessage("La contraseña debe tener al menos 6 caracteres"),
 ];
 
 router.use(authRequired);
-
-/**
- * @swagger
- * /profesor:
- *   get:
- *     summary: Lista todos los profesores
- *     tags: [Profesor]
- *     responses:
- *       200:
- *         description: Lista de profesores
- *       401:
- *         description: Sin token
- */
-
 router.get("/", ctrl.getProfesor);
+router.post(
+  "/",
+  requireRole("admin"),
+  validationProfesor,
+  validate,
+  ctrl.createProfesor,
+);
 router.get("/:email", ctrl.getProfesorByEmail);
-router.post("/", validationProfesor, validate, ctrl.createProfesor);
-router.put("/:id", validationProfesor, validate, ctrl.updateProfesor);
-router.delete("/:id", ctrl.deleteProfesor);
+router.put(
+  "/:id",
+  requireRole("admin"),
+  validationProfesor,
+  validate,
+  ctrl.updateProfesor,
+);
+router.delete("/:id", requireRole("admin"), ctrl.deleteProfesor);
 
 module.exports = router;

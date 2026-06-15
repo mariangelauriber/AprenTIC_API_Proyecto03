@@ -3,87 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | AprenTIC Campus API</title>
+  <title>Login | AprenTIC Campus</title>
+  <script>
+    if (window.location.port !== "3000") {
+      window.location.replace("http://localhost:3000/login.html");
+    }
+  </script>
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
-  <!--
-    Pantalla de login sencilla y profesional.
-    El formulario llama a /api/auth/login usando js/auth.js.
-  -->
-
-  <main class="login-layout">
-    <section class="login-hero">
-      <div class="brand-row">
+  <main class="login-layout login-simple">
+    <section class="login-card">
+      <div class="brand-row login-brand">
         <div class="brand-mark">A</div>
-        <span>AprenTIC Campus API</span>
+        <span>AprenTIC Campus</span>
       </div>
 
-      <h1>Panel académico multi-campus</h1>
-      <p>
-        Administra alumnos, profesores, promociones, proyectos, notas y métricas académicas
-        desde una interfaz conectada a tu API REST.
-      </p>
+      <h1>Iniciar sesión</h1>
 
-      <div class="feature-list">
-        <article>
-          <strong>CRUD académico</strong>
-          <span>Gestiona entidades principales del bootcamp.</span>
-        </article>
-        <article>
-          <strong>Analytics</strong>
-          <span>Consulta aptos, no aptos y alumnos en riesgo.</span>
-        </article>
-        <article>
-          <strong>Roles</strong>
-          <span>Base preparada para admin y profesores.</span>
-        </article>
-      </div>
-    </section>
+      <form id="loginForm" class="form-stack">
+        <label>
+          Email
+          <input
+            type="email"
+            id="email"
+            placeholder="admin@aprentic.es"
+            autocomplete="email"
+            required
+          />
+        </label>
 
-    <section class="login-panel">
-      <div class="login-card">
-        <h2>Iniciar sesión</h2>
-        <p class="muted">
-          Usa las credenciales creadas en el seed o crea primero un admin desde Postman.
-        </p>
+        <label>
+          Contraseña
+          <input
+            type="password"
+            id="password"
+            placeholder="Tu contraseña"
+            autocomplete="current-password"
+            required
+          />
+        </label>
 
-        <form id="loginForm" class="form-stack">
-          <label>
-            Email
-            <input
-              type="email"
-              id="email"
-              placeholder="admin@aprentic.es"
-              autocomplete="email"
-              required
-            />
-          </label>
+        <button type="submit" class="btn btn-primary btn-full">
+          Entrar
+        </button>
+      </form>
 
-          <label>
-            Contraseña
-            <input
-              type="password"
-              id="password"
-              placeholder="admin1234"
-              autocomplete="current-password"
-              required
-            />
-          </label>
-
-          <button type="submit" class="btn btn-primary btn-full">
-            Entrar al dashboard
-          </button>
-        </form>
-
-        <div id="loginMessage" class="message hidden"></div>
-
-        <div class="demo-box">
-          <strong>Credenciales demo sugeridas</strong>
-          <span>Email: admin@aprentic.es</span>
-          <span>Password: admin1234</span>
-        </div>
-      </div>
+      <div id="loginMessage" class="message hidden"></div>
     </section>
   </main>
 

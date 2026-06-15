@@ -4,25 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | AprenTIC Campus API</title>
+  <script>
+    if (window.location.port !== "3000") {
+      window.location.replace("http://localhost:3000/dashboard.html");
+    }
+  </script>
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
-  <!--
-    Dashboard principal.
-    Este archivo no contiene lógica pesada.
-    La lógica de llamadas al backend está en:
-    - js/api.js
-    - js/dashboard.js
-  -->
-
   <div class="app-shell">
-    <!-- Sidebar lateral estilo plataforma educativa -->
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="brand-mark">A</div>
         <div>
           <strong>AprenTIC</strong>
-          <span>Campus Admin</span>
+          <span>Campus API</span>
         </div>
       </div>
 
@@ -30,35 +26,32 @@
         <button class="nav-link active" data-section="overview">Dashboard</button>
         <button class="nav-link" data-section="alumnos">Alumnos</button>
         <button class="nav-link" data-section="profesores">Profesores</button>
-        <button class="nav-link" data-section="promociones">Promociones</button>
+        <button class="nav-link" data-section="cursos">Cursos</button>
         <button class="nav-link" data-section="proyectos">Proyectos</button>
         <button class="nav-link" data-section="notas">Notas</button>
-        <button class="nav-link" data-section="analytics">Analytics</button>
       </nav>
 
       <button id="logoutBtn" class="btn btn-secondary btn-full">Cerrar sesión</button>
     </aside>
 
-    <!-- Contenido principal -->
     <main class="main-content">
-      <header class="topbar">
+      <header id="dashboardTopbar" class="topbar">
         <div>
           <p class="eyebrow">Proyecto Integrador</p>
           <h1>AprenTIC Campus API</h1>
-          <p class="muted">
-            Panel visual conectado a tu backend de Node.js, Express y MongoDB Atlas.
+          <p id="welcomeText" class="muted">
+            Panel académico conectado a tu backend de Node.js, Express y MongoDB Atlas.
           </p>
         </div>
 
-        <div class="status-pill">
+        <div id="userRoleLabel" class="status-pill">
           <span class="status-dot"></span>
-          API local
+          Sesión activa
         </div>
       </header>
 
       <div id="globalMessage" class="message hidden"></div>
 
-      <!-- Resumen general -->
       <section id="section-overview" class="page-section active">
         <div class="metrics-grid">
           <article class="metric-card">
@@ -67,16 +60,16 @@
             <small>Registros académicos</small>
           </article>
 
-          <article class="metric-card">
+          <article id="metricProfesoresCard" class="metric-card">
             <span>Total profesores</span>
             <strong id="metricProfesores">0</strong>
             <small>Docentes activos</small>
           </article>
 
           <article class="metric-card">
-            <span>Promociones</span>
-            <strong id="metricPromociones">0</strong>
-            <small>Cursos o cohortes</small>
+            <span>Cursos</span>
+            <strong id="metricCursos">0</strong>
+            <small>Promociones activas</small>
           </article>
 
           <article class="metric-card">
@@ -84,242 +77,318 @@
             <strong id="metricProyectos">0</strong>
             <small>Entregas evaluables</small>
           </article>
+
+          <article class="metric-card">
+            <span>Notas</span>
+            <strong id="metricNotas">0</strong>
+            <small>Evaluaciones registradas</small>
+          </article>
         </div>
 
-        <section class="content-card">
+        <section id="overviewSummaryCard" class="content-card">
           <div class="section-header">
-            <div>
-              <h2>Estado del proyecto</h2>
-              <p>
-                Este dashboard sirve para demostrar visualmente el funcionamiento del backend:
-                CRUD, conexión con MongoDB y endpoints analíticos.
-              </p>
-            </div>
+          <div>
+            <h2>Resumen académico</h2>
+            <p>Vista general de los datos cargados desde la API.</p>
+          </div>
           </div>
 
           <div class="checklist-grid">
             <article>
               <strong>Backend</strong>
-              <span>Express + MongoDB Atlas + Mongoose.</span>
+              <span>Express, MongoDB Atlas y Mongoose.</span>
             </article>
             <article>
-              <strong>Frontend</strong>
-              <span>HTML, CSS y JavaScript sin frameworks.</span>
+              <strong>Autenticación</strong>
+              <span>JWT guardado en localStorage.</span>
             </article>
             <article>
-              <strong>API REST</strong>
-              <span>Rutas bajo el prefijo /api.</span>
+              <strong>Roles</strong>
+              <span>Vista diferenciada para admin y profesor.</span>
             </article>
           </div>
         </section>
       </section>
 
-      <!-- Alumnos -->
       <section id="section-alumnos" class="page-section">
         <div class="section-header">
           <div>
             <h2>Alumnos</h2>
-            <p>Crear, listar y eliminar alumnos registrados en la API.</p>
+            <p>Listado de alumnos y curso asociado.</p>
           </div>
-          <button class="btn btn-primary" data-reload="alumnos">Actualizar</button>
+          <div class="section-actions">
+            <button class="btn btn-secondary" id="btnCrearAlumno" style="display: none;">+ Crear alumno</button>
+          </div>
         </div>
 
-        <section class="content-grid">
-          <form id="alumnoForm" class="content-card form-grid">
-            <h3>Nuevo alumno</h3>
-
-            <label>Nombre<input name="nombre" required /></label>
-            <label>Apellidos<input name="apellidos" required /></label>
-            <label>Email<input type="email" name="email" required /></label>
-            <label>Password<input type="password" name="password" value="Alumno123" required /></label>
-            <label>Edad<input type="number" name="edad" min="16" max="99" /></label>
-            <label>Campus<input name="campus" placeholder="Sevilla Centro" /></label>
-
-            <!-- Si tu backend exige curso ObjectId, puedes pegarlo aquí. Si no, déjalo vacío. -->
-            <label>Curso ID opcional<input name="curso" placeholder="ObjectId de curso/promoción" /></label>
-
-            <button class="btn btn-primary" type="submit">Crear alumno</button>
-          </form>
-
-          <section class="content-card table-card">
-            <div class="table-header">
-              <h3>Listado de alumnos</h3>
-              <span id="alumnosCount" class="badge badge-neutral">0 registros</span>
+        <section id="formCrearAlumno" class="content-card" style="display: none;">
+          <h3>Crear nuevo alumno</h3>
+          <form class="form-grid">
+            <div>
+              <label>Nombre *</label>
+              <input type="text" class="input-nombre" placeholder="Nombre" required>
             </div>
-            <div id="alumnosTable" class="table-wrap"></div>
-          </section>
+            <div>
+              <label>Apellidos *</label>
+              <input type="text" class="input-apellidos" placeholder="Apellidos" required>
+            </div>
+            <div>
+              <label>Email *</label>
+              <input type="email" class="input-email" placeholder="Email" required>
+            </div>
+            <div>
+              <label>Contraseña *</label>
+              <input type="password" class="input-password" placeholder="Contraseña" required>
+            </div>
+            <div>
+              <label>Edad</label>
+              <input type="number" class="input-edad" placeholder="Edad" min="16" max="99">
+            </div>
+            <div>
+              <label>Campus</label>
+              <input type="text" class="input-campus" placeholder="Campus">
+            </div>
+            <div>
+              <label>Curso</label>
+              <select class="input-curso">
+                <option value="">Seleccionar curso</option>
+              </select>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn btn-primary" type="button" id="btnGuardarAlumno">Guardar</button>
+              <button class="btn btn-secondary" type="button" id="btnCancelarAlumno">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card table-card">
+          <div class="table-header">
+            <h3>Listado de alumnos</h3>
+            <span id="alumnosCount" class="badge badge-neutral">0 registros</span>
+          </div>
+          <div id="alumnosTable" class="table-wrap"></div>
         </section>
       </section>
 
-      <!-- Profesores -->
       <section id="section-profesores" class="page-section">
         <div class="section-header">
           <div>
             <h2>Profesores</h2>
-            <p>Administración de docentes y especialidades.</p>
+            <p>Listado de docentes, especialidades y campus.</p>
           </div>
-          <button class="btn btn-primary" data-reload="profesores">Actualizar</button>
+          <div class="section-actions">
+            <button class="btn btn-secondary" id="btnCrearProfesor" style="display: none;">+ Crear profesor</button>
+          </div>
         </div>
 
-        <section class="content-grid">
-          <form id="profesorForm" class="content-card form-grid">
-            <h3>Nuevo profesor</h3>
-
-            <label>Nombre<input name="nombre" required /></label>
-            <label>Apellidos<input name="apellidos" required /></label>
-            <label>Email<input type="email" name="email" required /></label>
-            <label>Password<input type="password" name="password" value="Profesor123" required /></label>
-            <label>Especialidad<input name="especialidad" placeholder="Backend" /></label>
-            <label>Campus<input name="campus" placeholder="Madrid Norte" /></label>
-
-            <button class="btn btn-primary" type="submit">Crear profesor</button>
-          </form>
-
-          <section class="content-card table-card">
-            <div class="table-header">
-              <h3>Listado de profesores</h3>
-              <span id="profesoresCount" class="badge badge-neutral">0 registros</span>
+        <section id="formCrearProfesor" class="content-card" style="display: none;">
+          <h3>Crear nuevo profesor</h3>
+          <form class="form-grid">
+            <div>
+              <label>Nombre *</label>
+              <input type="text" class="input-nombre" placeholder="Nombre" required>
             </div>
-            <div id="profesoresTable" class="table-wrap"></div>
-          </section>
+            <div>
+              <label>Apellidos *</label>
+              <input type="text" class="input-apellidos" placeholder="Apellidos" required>
+            </div>
+            <div>
+              <label>Email *</label>
+              <input type="email" class="input-email" placeholder="Email" required>
+            </div>
+            <div>
+              <label>Contraseña *</label>
+              <input type="password" class="input-password" placeholder="Contraseña" required>
+            </div>
+            <div>
+              <label>Especialidad *</label>
+              <input type="text" class="input-especialidad" placeholder="Especialidad" required>
+            </div>
+            <div>
+              <label>Campus *</label>
+              <input type="text" class="input-campus" placeholder="Campus" required>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn btn-primary" type="button" id="btnGuardarProfesor">Guardar</button>
+              <button class="btn btn-secondary" type="button" id="btnCancelarProfesor">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card table-card">
+          <div class="table-header">
+            <h3>Listado de profesores</h3>
+            <span id="profesoresCount" class="badge badge-neutral">0 registros</span>
+          </div>
+          <div id="profesoresTable" class="table-wrap"></div>
         </section>
       </section>
 
-      <!-- Promociones / Cursos -->
-      <section id="section-promociones" class="page-section">
+      <section id="section-cursos" class="page-section">
         <div class="section-header">
           <div>
-            <h2>Promociones / Cursos</h2>
-            <p>
-              En el backend actual esta entidad puede estar implementada como Curso.
-              Visualmente la presentamos como promoción académica.
-            </p>
+            <h2>Cursos</h2>
+            <p>Cursos disponibles y profesor asignado.</p>
           </div>
-          <button class="btn btn-primary" data-reload="promociones">Actualizar</button>
+          <div class="section-actions">
+            <button class="btn btn-secondary" id="btnCrearCurso" style="display: none;">+ Crear curso</button>
+          </div>
         </div>
 
-        <section class="content-grid">
-          <form id="promocionForm" class="content-card form-grid">
-            <h3>Nueva promoción</h3>
-
-            <label>Nombre<input name="nombre" required placeholder="FS-2026-01" /></label>
-            <label>Descripción<input name="descripcion" placeholder="Bootcamp Full Stack" /></label>
-            <label>Campus<input name="campus" placeholder="Sevilla Centro" /></label>
-            <label>Fecha inicio<input type="date" name="fechaInicio" /></label>
-            <label>Fecha fin<input type="date" name="fechaFin" /></label>
-            <label>Profesor ID opcional<input name="profesor" placeholder="ObjectId de profesor" /></label>
-
-            <button class="btn btn-primary" type="submit">Crear promoción</button>
-          </form>
-
-          <section class="content-card table-card">
-            <div class="table-header">
-              <h3>Listado de promociones</h3>
-              <span id="promocionesCount" class="badge badge-neutral">0 registros</span>
+        <section id="formCrearCurso" class="content-card" style="display: none;">
+          <h3>Crear nuevo curso</h3>
+          <form class="form-grid">
+            <div>
+              <label>Nombre *</label>
+              <input type="text" class="input-nombre" placeholder="Nombre del curso" required>
             </div>
-            <div id="promocionesTable" class="table-wrap"></div>
-          </section>
+            <div>
+              <label>Campus *</label>
+              <input type="text" class="input-campus" placeholder="Campus" required>
+            </div>
+            <div>
+              <label>Fecha de inicio</label>
+              <input type="date" class="input-fechaInicio">
+            </div>
+            <div>
+              <label>Fecha de fin</label>
+              <input type="date" class="input-fechaFin">
+            </div>
+            <div>
+              <label>Profesor</label>
+              <select class="input-profesor">
+                <option value="">Seleccionar profesor</option>
+              </select>
+            </div>
+            <div>
+              <label>Descripción</label>
+              <input type="text" class="input-descripcion" placeholder="Descripción">
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn btn-primary" type="button" id="btnGuardarCurso">Guardar</button>
+              <button class="btn btn-secondary" type="button" id="btnCancelarCurso">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card table-card">
+          <div class="table-header">
+            <h3>Listado de cursos</h3>
+            <span id="cursosCount" class="badge badge-neutral">0 registros</span>
+          </div>
+          <div id="cursosTable" class="table-wrap"></div>
         </section>
       </section>
 
-      <!-- Proyectos -->
       <section id="section-proyectos" class="page-section">
         <div class="section-header">
           <div>
             <h2>Proyectos</h2>
-            <p>Gestión de proyectos evaluables.</p>
+            <p>Entregables evaluables por curso.</p>
           </div>
-          <button class="btn btn-primary" data-reload="proyectos">Actualizar</button>
+          <div class="section-actions">
+            <button class="btn btn-secondary" id="btnCrearProyecto" style="display: none;">+ Crear proyecto</button>
+          </div>
         </div>
 
-        <section class="content-grid">
-          <form id="proyectoForm" class="content-card form-grid">
-            <h3>Nuevo proyecto</h3>
-
-            <label>Nombre<input name="nombre" required placeholder="Proyecto Final API REST" /></label>
-            <label>Descripción<input name="descripcion" placeholder="API REST con MongoDB" /></label>
-            <label>Fecha entrega<input type="date" name="fechaEntrega" /></label>
-            <label>Curso ID opcional<input name="curso" placeholder="ObjectId de curso/promoción" /></label>
-
-            <button class="btn btn-primary" type="submit">Crear proyecto</button>
-          </form>
-
-          <section class="content-card table-card">
-            <div class="table-header">
-              <h3>Listado de proyectos</h3>
-              <span id="proyectosCount" class="badge badge-neutral">0 registros</span>
+        <section id="formCrearProyecto" class="content-card" style="display: none;">
+          <h3>Crear nuevo proyecto</h3>
+          <form class="form-grid">
+            <div>
+              <label>Nombre *</label>
+              <input type="text" class="input-nombre" placeholder="Nombre del proyecto" required>
             </div>
-            <div id="proyectosTable" class="table-wrap"></div>
-          </section>
+            <div>
+              <label>Descripción</label>
+              <input type="text" class="input-descripcion" placeholder="Descripción" maxlength="200">
+            </div>
+            <div>
+              <label>Fecha de entrega</label>
+              <input type="date" class="input-fechaEntrega">
+            </div>
+            <div>
+              <label>Curso *</label>
+              <select class="input-curso" required>
+                <option value="">Seleccionar curso</option>
+              </select>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn btn-primary" type="button" id="btnGuardarProyecto">Guardar</button>
+              <button class="btn btn-secondary" type="button" id="btnCancelarProyecto">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card table-card">
+          <div class="table-header">
+            <h3>Listado de proyectos</h3>
+            <span id="proyectosCount" class="badge badge-neutral">0 registros</span>
+          </div>
+          <div id="proyectosTable" class="table-wrap"></div>
         </section>
       </section>
 
-      <!-- Notas -->
       <section id="section-notas" class="page-section">
         <div class="section-header">
           <div>
             <h2>Notas</h2>
-            <p>Relación entre alumnos, proyectos y calificaciones.</p>
+            <p>Calificaciones de alumnos por proyecto.</p>
           </div>
-          <button class="btn btn-primary" data-reload="notas">Actualizar</button>
+          <div class="section-actions">
+            <button class="btn btn-secondary" id="btnCrearNota" style="display: none;">+ Crear nota</button>
+          </div>
         </div>
 
-        <section class="content-grid">
-          <form id="notaForm" class="content-card form-grid">
-            <h3>Nueva nota</h3>
-
-            <label>Alumno ID<input name="alumno" required placeholder="ObjectId del alumno" /></label>
-            <label>Proyecto ID<input name="proyecto" required placeholder="ObjectId del proyecto" /></label>
-            <label>Profesor ID opcional<input name="profesor" placeholder="ObjectId del profesor" /></label>
-            <label>Calificación<input type="number" step="0.1" min="0" max="10" name="calificacion" required /></label>
-            <label>
-              Estado
-              <select name="estado" required>
+        <section id="formCrearNota" class="content-card" style="display: none;">
+          <h3>Crear nueva nota</h3>
+          <form class="form-grid">
+            <div>
+              <label>Alumno *</label>
+              <select class="input-alumno" required>
+                <option value="">Seleccionar alumno</option>
+              </select>
+            </div>
+            <div>
+              <label>Proyecto *</label>
+              <select class="input-proyecto" required>
+                <option value="">Seleccionar proyecto</option>
+              </select>
+            </div>
+            <div>
+              <label>Profesor</label>
+              <select class="input-profesor">
+                <option value="">Seleccionar profesor</option>
+              </select>
+            </div>
+            <div>
+              <label>Calificación *</label>
+              <input type="number" class="input-calificacion" placeholder="0 - 10" min="0" max="10" step="0.1" required>
+            </div>
+            <div>
+              <label>Estado *</label>
+              <select class="input-estado" required>
                 <option value="apto">apto</option>
                 <option value="no apto">no apto</option>
               </select>
-            </label>
-            <label>Observaciones<textarea name="observaciones" rows="3"></textarea></label>
-
-            <button class="btn btn-primary" type="submit">Crear nota</button>
-          </form>
-
-          <section class="content-card table-card">
-            <div class="table-header">
-              <h3>Listado de notas</h3>
-              <span id="notasCount" class="badge badge-neutral">0 registros</span>
             </div>
-            <div id="notasTable" class="table-wrap"></div>
-          </section>
+            <div>
+              <label>Observaciones</label>
+              <input type="text" class="input-observaciones" placeholder="Observaciones">
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn btn-primary" type="button" id="btnGuardarNota">Guardar</button>
+              <button class="btn btn-secondary" type="button" id="btnCancelarNota">Cancelar</button>
+            </div>
+          </form>
         </section>
-      </section>
 
-      <!-- Analytics -->
-      <section id="section-analytics" class="page-section">
-        <div class="section-header">
-          <div>
-            <h2>Analytics académico</h2>
-            <p>Endpoints analíticos para la presentación técnica del proyecto.</p>
+        <section class="content-card table-card">
+          <div class="table-header">
+            <h3>Listado de notas</h3>
+            <span id="notasCount" class="badge badge-neutral">0 registros</span>
           </div>
-          <button id="reloadAnalyticsBtn" class="btn btn-primary">Actualizar analytics</button>
-        </div>
-
-        <div class="analytics-grid">
-          <section class="content-card">
-            <h3>Tasa de aptos por campus</h3>
-            <div id="analyticsAptos" class="analytics-list"></div>
-          </section>
-
-          <section class="content-card">
-            <h3>Ranking de proyectos con más no aptos</h3>
-            <div id="analyticsRanking" class="analytics-list"></div>
-          </section>
-
-          <section class="content-card">
-            <h3>Alumnos en riesgo</h3>
-            <div id="analyticsRiesgo" class="analytics-list"></div>
-          </section>
-        </div>
+          <div id="notasTable" class="table-wrap"></div>
+        </section>
       </section>
     </main>
   </div>

@@ -1,5 +1,4 @@
 const notaService = require("../services/notaService");
-
 exports.getNotas = async (req, res, next) => {
   try {
     const notas = await notaService.getAll();
@@ -37,11 +36,42 @@ exports.updateNota = async (req, res, next) => {
   }
 };
 
+exports.evaluarNota = async (req, res, next) => {
+  try {
+    const nota = await notaService.getRawById(req.params.id);
+
+    if (!nota) {
+      return res.status(404).json({ error: "Nota no encontrada" });
+    }
+
+    const evaluacionData = {
+      observaciones: req.body.observaciones || "",
+    };
+
+    if (req.body.calificacion !== undefined) {
+      evaluacionData.calificacion = req.body.calificacion;
+    }
+
+    if (req.body.estado !== undefined) {
+      evaluacionData.estado = req.body.estado;
+    }
+
+    const updatedNota = await notaService.updateEvaluacion(
+      req.params.id,
+      evaluacionData,
+    );
+
+    res.json(updatedNota);
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.deleteNota = async (req, res, next) => {
   try {
     const deleted = await notaService.remove(req.params.id);
     if (!deleted) return res.status(404).json({ error: 'Nota no encontrada' });
-    res.json(deleted);
+    res.json({ mensaje: "Nota eliminada", nota: deleted });
   } catch (err) {
     next(err);
   }

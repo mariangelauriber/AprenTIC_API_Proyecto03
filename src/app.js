@@ -11,12 +11,26 @@ const alumnoRoutes = require("./routes/alumnoRoutes");
 const cursoRoutes = require("./routes/cursoRoutes");
 const proyectoRoutes = require("./routes/proyectoRoutes");
 const notaRoutes = require("./routes/notaRoutes");
+const notaController = require("./controllers/notaController");
+const proyectoController = require("./controllers/proyectoController");
+const authRequired = require("./middleware/authRequired");
 
 const path = require("path");
 
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 function logger(req, res, next) {
   console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
@@ -24,6 +38,11 @@ function logger(req, res, next) {
 }
 app.use(logger);
 
+app.use(express.static(path.join(__dirname, "../public")));
+
+app.get("/", (req, res) => {
+  res.redirect("/login.html");
+});
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSchema));
 
@@ -35,6 +54,17 @@ app.use("/alumno", alumnoRoutes);
 app.use("/curso", cursoRoutes);
 app.use("/proyecto", proyectoRoutes);
 app.use("/nota", notaRoutes);
+app.use("/api/proyecto", proyectoRoutes);
+app.use("/api/nota", notaRoutes);
+
+app.delete("/nota/:id", authRequired, notaController.deleteNota);
+app.post("/nota/:id/delete", authRequired, notaController.deleteNota);
+app.delete("/proyecto/:id", authRequired, proyectoController.deleteProyecto);
+app.post("/proyecto/:id/delete", authRequired, proyectoController.deleteProyecto);
+app.delete("/api/nota/:id", authRequired, notaController.deleteNota);
+app.post("/api/nota/:id/delete", authRequired, notaController.deleteNota);
+app.delete("/api/proyecto/:id", authRequired, proyectoController.deleteProyecto);
+app.post("/api/proyecto/:id/delete", authRequired, proyectoController.deleteProyecto);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });

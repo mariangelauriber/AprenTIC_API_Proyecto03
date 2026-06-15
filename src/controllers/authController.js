@@ -19,6 +19,7 @@ exports.register = async (req, res, next) => {
       apellidos,
       role: rol,
     });
+
     res.status(201).json({
       id: user._id,
       email: user.email,
@@ -34,26 +35,47 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await authService.buscarPorEmail(email);
+    const loginAccount = await authService.buscarCuentaPorEmail(email);
 
-    if (!user) return res.status(401).json({ error: "Credenciales inválidas" });
+    if (!loginAccount) {
+      return res.status(401).json({ error: "Credenciales inválidas" });
+    }
 
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(401).json({ error: "Credenciales no válidas" });
+    const { account, authCollection, profile, role } = loginAccount;
+    const storedPassword = account.password || "";
+    const passwordIsHashed = storedPassword.startsWith("$2");
+    const ok = passwordIsHashed
+      ? await bcrypt.compare(password, storedPassword)
+      : password === storedPassword;
+
+    if (!ok) {
+      return res.status(401).json({ error: "Credenciales no válidas" });
+    }
+
+    const profileId = profile?._id || account._id;
 
     const token = jwt.sign(
-      { sub: user._id, role: user.role },
+      {
+        sub: profileId,
+        accountId: account._id,
+        email: account.email,
+        role,
+        authCollection,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
+
     res.json({
       token,
       user: {
-        id: user._id,
-        email: user.email,
-        nombre: user.nombre,
-        apellidos: user.apellidos,
-        rol: user.role,
+        id: profileId,
+        accountId: account._id,
+        email: account.email,
+        nombre: account.nombre,
+        apellidos: account.apellidos,
+        rol: role,
+        authCollection,
       },
     });
   } catch (e) {

@@ -29,35 +29,34 @@ const validationAdmin = [
 ];
 
 router.use(authRequired);
+router.use(requireRole("admin"));
 
 /**
  * @swagger
- * /admin:
- *   post:
- *     summary: Crea un admin
+ * /admin/{id}:
+ *   get:
+ *     summary: Obtiene un admin por ID
  *     tags: [Admin]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [nombre, apellidos, email, password]
- *             properties:
- *               nombre: {type: string, example: "Carlos"}
- *               apellidos: {type: string, example: "Martínez López"}
- *               email: {type: string, example: "admin@aprentic.es"}
- *               password: {type: string, example: "admin1234"}
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del admin
  *     responses:
- *       201:
- *         description: Admin creado
- *       400:
- *         description: Datos inválidos
+ *       200:
+ *         description: Admin encontrado
  *       401:
  *         description: Sin token
+ *       404:
+ *         description: Admin no encontrado
  */
 
-router.get("/:email", ctrl.getAdmin);
+router.get("/", ctrl.getAdmins);
+router.get("/:id", ctrl.getAdminById);
 router.post("/", validationAdmin, validate, ctrl.createAdmin);
 router.put("/:id", validationAdmin, validate, ctrl.updateAdmin);
 router.delete("/:id", ctrl.deleteAdmin);

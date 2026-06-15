@@ -7,6 +7,6 @@ const NotaSchema = new mongoose.Schema({
   calificacion: { type: Number, required: true, min: 0, max: 10 },
   estado: { type: String, required: true, enum: ['apto', 'no apto'] },
   observaciones: { type: String, trim: true }
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('Nota', NotaSchema, 'nota');
